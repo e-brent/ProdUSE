@@ -3,7 +3,7 @@ import Flatlist from '../components/ItemList';
 
 export default function Index() {
   return (
-<SafeAreaView>
+<View style={styles.background}>
 <View style={styles.headerContainer}>
       {/* Left Image (Menu Button) */}
       <TouchableOpacity style={styles.iconContainer}>
@@ -28,9 +28,11 @@ export default function Index() {
         />
       </TouchableOpacity>
     </View>
-    <Flatlist>
-    </Flatlist>
-</SafeAreaView>
+    <View style={styles.list}>
+      <Flatlist>
+      </Flatlist>
+    </View>
+</View>
     
   );
 }
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 10,
+    paddingTop: 80,
     height: 140,
     backgroundColor: '#41521f', 
   },
@@ -68,4 +71,13 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 10,
   },
+  background: {
+    backgroundColor: 'black',
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
