@@ -1,4 +1,5 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import Flatlist from '@/components/Itemlist';
 
 export default function Index() {
   return (
@@ -26,6 +27,8 @@ export default function Index() {
           style={styles.iconImage}
         />
       </TouchableOpacity>
+       <Flatlist>
+    </Flatlist>
     </View>
   );
 }
