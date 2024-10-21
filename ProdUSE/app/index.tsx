@@ -1,10 +1,10 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import Flatlist from '@/components/Itemlist';
+import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import Flatlist from '../components/ItemList';
 
 export default function Index() {
   return (
-
-    <View style={styles.headerContainer}>
+<SafeAreaView>
+<View style={styles.headerContainer}>
       {/* Left Image (Menu Button) */}
       <TouchableOpacity style={styles.iconContainer}>
         <Image
@@ -27,9 +27,11 @@ export default function Index() {
           style={styles.iconImage}
         />
       </TouchableOpacity>
-       <Flatlist>
-    </Flatlist>
     </View>
+    <Flatlist>
+    </Flatlist>
+</SafeAreaView>
+    
   );
 }
 const styles = StyleSheet.create({
