@@ -1,3 +1,5 @@
+import * as SQLite from 'expo-sqlite';
+
 // get perishable items -- return list of items in the perishable table
 
 // get recipes -- return list of recipe names in the recipes table
