@@ -33,7 +33,7 @@ export default function Index() {
         <TextInput
           style={styles.searchInput}
           placeholder="Search..."
-          placeholderTextColor="#aaa"
+          placeholderTextColor="gray"
         />
       </View>
 
