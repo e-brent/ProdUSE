@@ -1,24 +1,21 @@
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, Image, Platform, View} from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
+import AddGroceryItems from '@/components/MyGrocery';
 
-export default function Metrics() {
+export default function myMetrics() {
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text style={styles.text}>Hello, this is the Metrics page</Text>
-      </View>
-    </SafeAreaView>
+   <View style = {styles.container}>
+    <ThemedText type= "title"> Hello World</ThemedText>
+    <AddGroceryItems>
+    </AddGroceryItems>
+   </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',  
-    alignItems: 'center',     
-    backgroundColor: '#f8f8f8', 
-  },
-  text: {
-    fontSize: 24, 
-    fontWeight: 'bold', 
-  },
+ container: {
+  alignItems: "center",
+  flex: 1,
+  justifyContent: "center",
+ }
 });

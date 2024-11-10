@@ -25,6 +25,7 @@ export default function Index() {
         <Image
           source={require('../assets/images/plusicon.png')}  // Plus sign 
           style={styles.iconImage}
+          
         />
       </TouchableOpacity>
     </View>
