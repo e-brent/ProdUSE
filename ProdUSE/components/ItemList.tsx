@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
 
+import { useSQLiteContext } from '../db/SQLiteProvider';
+import Operations from '../db/operations';
+import { PerishableItem, PastItem, Recipe } from '../db/types';
+import type { ListRenderItem } from '@react-native/virtualized-lists';
+
 /*sources that I used
 https://reactnative.dev/docs/flatlist?language=typescript
 https://docs.expo.dev/versions/latest/sdk/image/#image
@@ -9,6 +14,7 @@ https://reactnative.dev/docs/touchableopacity
 https://medium.com/@jujunsetiawan10/how-to-create-progress-bar-in-react-native-f27ae2871ac3#:~:text=To%20create%20a%20modern-looking%20progress%20bar%20in%20React,by%20running%20the%20following%20command%3A%20yarn%20add%20react-native-progress
 https://reactnative.dev/docs/view
 */
+
 
 type ItemData = {
   id: string;
@@ -38,6 +44,7 @@ const DATA: ItemData[] = [
   },
 ];
 
+/*
 type ItemProps = {
   item: ItemData;
   onPress: () => void;
@@ -71,9 +78,61 @@ const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: I
     </View>
   </TouchableOpacity>
 );
+*/
 
-const Flatlist = () => {
+type ItemProps = {
+  item: PerishableItem;
+  onPress: () => void;
+  backgroundColor: string;
+  textColor: string;
+  onEdit: (id: string) => void; 
+  onDelete: (id: string) => void; 
+};
+
+const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: ItemProps) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
+    <View style={styles.row}>
+      <Image source={{ uri: item.image_url }} style={styles.image} />
+      <View style={styles.textContainer}>
+        <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
+        
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${item.amount_used * 100}%`}]} />
+        </View>
+        <Text style={styles.percentageText}>{Math.round(item.amount_used * 100)}%</Text>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => onEdit(item.perishable_id)} style={styles.button}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.button}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </TouchableOpacity>
+);
+
+
+const ItemList = () => {  
   const [selectedId, setSelectedId] = useState<string>();
+
+  const ctx = useSQLiteContext();
+  const client = new Operations(ctx);
+  const [items, setItems] = useState<PerishableItem[]>([]);
+  const [newItem, setNewItem] = useState('');
+
+  const prepareItems = React.useCallback(async () => {
+    if (newItem.length === 0) {
+      console.log('prepare items');
+      setItems(await client.getPerishableItems());
+    }
+  }, [newItem]);
+
+  React.useEffect(() => {
+    void prepareItems();
+  }, [prepareItems]);
 
   const handleEdit = (id: string) => {
   };
@@ -81,14 +140,15 @@ const Flatlist = () => {
   const handleDelete = (id: string) => {
   };
 
-  const renderItem = ({ item }: { item: ItemData }) => {
-    const backgroundColor = item.id === selectedId ? '#F18208' : '#FFFFFF';
-    const color = item.id === selectedId ? 'white' : 'black';
+  //const renderItem = ({ item }: { item: ItemData }) => {
+  const renderItem = ({ item }: { item: PerishableItem }) => {
+    const backgroundColor = item.perishable_id === selectedId ? '#F18208' : '#FFFFFF';
+    const color = item.perishable_id === selectedId ? 'white' : 'black';
 
   return (
     <Item
         item={item}
-        onPress={() => setSelectedId(item.id)}
+        onPress={() => setSelectedId(item.perishable_id)}
         backgroundColor={backgroundColor}
         textColor={color}
         onEdit={handleEdit} 
@@ -100,9 +160,9 @@ const Flatlist = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={items}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.perishable_id}
         extraData={selectedId}
       />
     </SafeAreaView>
@@ -171,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Flatlist;
+export default ItemList;

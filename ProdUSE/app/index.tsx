@@ -1,5 +1,5 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import Flatlist from '../components/ItemList';
+import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, TextInput} from 'react-native';
+import ItemList from '../components/ItemList';
 
 export default function Index() {
   return (
@@ -8,7 +8,7 @@ export default function Index() {
       {/* Left Image (Menu Button) */}
       <TouchableOpacity style={styles.iconContainer}>
         <Image
-          source={require('../assets/images/menuicon.png')}  // Menu button image
+          source={require('../assets/images/filtericon.png')}  // Menu button image
           style={styles.iconImage}
         />
       </TouchableOpacity>
@@ -29,9 +29,18 @@ export default function Index() {
         />
       </TouchableOpacity>
     </View>
+
+    <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          placeholderTextColor="gray"
+        />
+      </View>
+
     <View style={styles.list}>
-      <Flatlist>
-      </Flatlist>
+      <ItemList>
+      </ItemList>
     </View>
 </View>
     
@@ -54,9 +63,10 @@ const styles = StyleSheet.create({
     width: 24,  
     height: 24,
     backgroundColor: 'transparent',
+    marginBottom: 15,
   },
   titleContainer: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -64,17 +74,31 @@ const styles = StyleSheet.create({
     width: 47,
     height: 70,
     marginRight: 10, 
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
+    marginBottom: 15, 
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
     padding: 10,
+    marginBottom: 15,
   },
   background: {
     backgroundColor: 'black',
     flex: 1,
+  },
+  searchContainer: {
+    padding: 10,
+    backgroundColor: '#e0e0e0',
+  },
+  searchInput: {
+    height: 40,
+    borderColor: '#e0e0e0',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    backgroundColor: 'white',
   },
   list: {
     flex: 1,
