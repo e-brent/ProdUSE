@@ -18,6 +18,12 @@ const migration: DatabaseMigration = {
             INSERT INTO recipes (item, recipe_name) VALUES ('strawberries', 'frui salad');
             INSERT INTO recipes (item, recipe_name) VALUES ('apples', 'apple crisp');
             INSERT INTO recipes (item, recipe_name) VALUES ('chickpeas', 'greek salad');
+
+            INSERT INTO images (category_name, image_path) VALUES ('dairy', 'ProdUSE/assets/images/dairyIcon.png');
+            INSERT INTO images (category_name, image_path) VALUES ('fruit', 'ProdUSE/assets/images/fruitIcon.png');
+            INSERT INTO images (category_name, image_path) VALUES ('meat/fish', 'ProdUSE/assets/images/meatIcon.png');
+            INSERT INTO images (category_name, image_path) VALUES ('other', 'ProdUSE/assets/images/otherIcon.png');
+            INSERT INTO images (category_name, image_path) VALUES ('vegetable', 'ProdUSE/assets/images/vegetableIcon.png');
         `);
     },
 };
