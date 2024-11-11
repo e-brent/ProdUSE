@@ -35,3 +35,8 @@ export type Recipe = {
     item: string;
     recipe_name: string;
 }
+
+export type ImagePath = {
+    category_name: string;
+    image_path: string;
+}
