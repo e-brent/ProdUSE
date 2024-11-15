@@ -31,6 +31,9 @@ const migration : DatabaseMigration = {
                 recipe_name TEXT NOT NULL, 
                 PRIMARY KEY (item, recipe_name)
             );
+            CREATE TABLE IF NOT EXISTS images (
+                category_name TEXT PRIMARY KEY NOT NULL,
+                image_path TEXT NOT NULL
         `);
     },
 };
@@ -41,4 +44,5 @@ export default migration;
 DROP TABLE IF EXISTS perishableItems;
 DROP TABLE IF EXISTS pastItems;
 DROP TABLE IF EXISTS recipes;
+DROP TABLE IF EXISTS images;
 */
