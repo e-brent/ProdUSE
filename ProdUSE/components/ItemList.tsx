@@ -4,7 +4,6 @@ import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
 import { PerishableItem, PastItem, Recipe } from '../db/types';
-import type { ListRenderItem } from '@react-native/virtualized-lists';
 
 /*sources that I used
 https://reactnative.dev/docs/flatlist?language=typescript
@@ -89,6 +88,11 @@ type ItemProps = {
   onDelete: (id: string) => void; 
 };
 
+type ItemParameters = {
+  search: boolean,
+  item_name?: string
+}
+
 const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: ItemProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
@@ -114,8 +118,8 @@ const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: I
   </TouchableOpacity>
 );
 
-
-const ItemList = () => {  
+//item_name?: string
+const ItemList = ({search, item_name} : ItemParameters) => {  
   const [selectedId, setSelectedId] = useState<string>();
 
   const ctx = useSQLiteContext();
@@ -126,7 +130,15 @@ const ItemList = () => {
   const prepareItems = React.useCallback(async () => {
     if (newItem.length === 0) {
       console.log('prepare items');
-      setItems(await client.getPerishableItems());
+
+      if (search){
+        console.log('searching');
+        setItems(await client.searchPerishableItems(item_name));
+      }
+      else {
+        console.log('get all items');
+        setItems(await client.getPerishableItems());
+      }
     }
   }, [newItem]);
 

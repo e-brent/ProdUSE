@@ -1,7 +1,22 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, TextInput} from 'react-native';
 import ItemList from '../components/ItemList';
 
+import React, { useState } from 'react';
+
 export default function Index() {
+
+  const [search, setSearch] = useState(false);
+  const [searchName, setSearchName] = useState("");
+  const [update, setUpdate] = useState(0);
+
+  const searchSubmit = (text:string) => {
+      setSearch(true);
+      setSearchName(text);
+      setUpdate(update+1);
+
+      console.log(update + ' ' + text);
+  }
+
   return (
 <View style={styles.background}>
 <View style={styles.headerContainer}>
@@ -35,11 +50,17 @@ export default function Index() {
           style={styles.searchInput}
           placeholder="Search..."
           placeholderTextColor="gray"
+          onSubmitEditing = {(event) => searchSubmit(event.nativeEvent.text)}
+          returnKeyType="search"
         />
       </View>
 
     <View style={styles.list}>
-      <ItemList>
+      <ItemList
+        key = {update}
+        search = {search}
+        item_name = {searchName}
+      >
       </ItemList>
     </View>
 </View>
