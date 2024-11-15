@@ -85,8 +85,17 @@ class Operations {
 
 // get item expiration date from table -- this table needs to be created -- actually this is seeming very complicated so maybe not??
 
-// get category image from table -- this table needs to be created
+// get category image from table -- helper function for adding new items to the table
 // Emme
+    async getImagePath(category: string): Promise<string | null> {
+        const imagePath = await this.db.getFirstAsync<{image_path: string}>('SELECT image_path FROM images WHERE category LIKE "?"', [category]);
+
+        if(!imagePath){
+            return 'ProdUSE/assets/images/otherIcon.png';
+        }
+        
+        return imagePath.image_path;
+    }
 
 // add item to perishableItems table
 // Emme
@@ -100,6 +109,17 @@ class Operations {
         else {
             id = id + 1;
         }
+
+        // get image path 
+        let image = await this.getImagePath(category);
+
+        // convert date purchased to string
+        let date = date_purchased.toString();
+
+        await this.db.runAsync(
+            'INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (?, "?", "?", " ", ?, ?, "?", "?"',
+            [id, perishable_name, date, amount_used, category, image]
+        );
 
 
     }
