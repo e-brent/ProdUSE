@@ -4,8 +4,9 @@ import { PerishableItem, PastItem, Recipe } from './types';
 class Operations {
     constructor(private db: SQLiteDatabase) { }
 
-    // get all items from the perishableItems table
+// get all items from the perishableItems table
     async getPerishableItems(): Promise<PerishableItem[]> {
+
         const rawValues = await this.db.getAllAsync<
             Omit<PerishableItem, 'date_purchased' | 'expiration_date'> & {
                 date_purchased: string;
@@ -20,7 +21,36 @@ class Operations {
         }));
     }
 
-    // get specific item from the perishableItems table
+// search perishableItems based on item name -- return list of matching items
+// Emme
+async searchPerishableItems(item_name?: string): Promise<PerishableItem[]> {
+
+    let query = "";
+
+    if (item_name == ""){
+        query = 'SELECT perishable_id, perishable_name, date_purchased as "date_purchased", expiration_date as "expiration_date", days_in_fridge, amount_used, category, image_url FROM perishableItems';
+    }
+    else {
+        query = `SELECT perishable_id, perishable_name, date_purchased as "date_purchased", expiration_date as "expiration_date", days_in_fridge, amount_used, category, image_url FROM perishableItems WHERE perishable_name LIKE "${item_name}"`;
+    }
+
+    console.log (query);
+
+    const rawValues = await this.db.getAllAsync<
+        Omit<PerishableItem, 'date_purchased' | 'expiration_date'> & {
+            date_purchased: string;
+            expiration_date: string;
+        }
+    >(query);
+
+    return rawValues.map((value) => ({
+        ...value,
+        date_purchased: new Date(value.date_purchased),
+        expiration_date: new Date(value.expiration_date),
+    }));
+}
+
+// get specific item from the perishableItems table
     async getperishableItem(id: number): Promise<PerishableItem | null> {
         const rawValue = await this.db.getFirstAsync<
             Omit<PerishableItem, 'date_purchased' | 'expiration_date'> & {
@@ -83,9 +113,6 @@ class Operations {
         );
     }
 
-    // search perishableItems based on item name -- return list of matching items
-    // Emme
-
     // filter by category
     // Kyle
     async filterByCategory(category: string): Promise<PerishableItem[]> {
@@ -137,7 +164,9 @@ class Operations {
         const newestFirst = await operations.filterByDateOfPurchase('desc');
         */
     }
-
+    
+// filter by category
+// Kyle
     
 
     // delete item from perishableItems
