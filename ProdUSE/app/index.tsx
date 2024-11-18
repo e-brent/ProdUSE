@@ -32,14 +32,14 @@ export default function Index() {
         {/* Left Image (Menu Button) */}
         <TouchableOpacity style={styles.iconContainer} onPress={toggleFilter}>
           <Image
-            source={require('../assets/images/filtericon.png')}  // Menu button image
+            source={require('../assets/images/filtericon.png')}  // Filter button image
             style={styles.iconImage}
           />
         </TouchableOpacity>
         {/* Logo and Title */}
         <View style={styles.titleContainer}>
           <Image
-            source={require('../assets/images/produselogo.png')}  // logo image
+            source={require('../assets/images/produse.png')}  // logo image
             style={styles.logo}
           />
           <Text style={styles.title}>MY FRIDGE</Text>
@@ -169,11 +169,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 47,
-    height: 70,
-    marginRight: 10,
-    backgroundColor: 'white',
-    marginBottom: 15,
+    width: 44,
+    height: 65,
+    marginLeft: 5,
+    marginRight:5,
+    marginBottom: 10,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 24,
