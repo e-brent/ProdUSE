@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, Text, View, Button, ScrollView, Keyboard, Toucha
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from "expo-status-bar";
+import { useRouter } from 'expo-router';
 
 /* 
 Sources of have used 
@@ -18,9 +19,16 @@ const AddGroceryItems = () => {
   const [note, onChangeNote] = useState('');
   const [date, setDate] = useState(new Date());
 
+  const router = useRouter();
+
   const onChange = (e, selectedDate) => {
     setDate(selectedDate || date);
   };
+
+  const onSubmit = () => {
+    alert("Item added!")
+    router.back();
+  }
 
   return (
     <SafeAreaProvider>
@@ -83,7 +91,7 @@ const AddGroceryItems = () => {
               <Button
                 title="Submit"
                 color="green"
-                onPress={() => alert("Item added!")} // This is the submit feedback - On Press
+                onPress={() => onSubmit()} // This is the submit feedback - On Press
               />
             </View>
             <StatusBar style="auto" />
