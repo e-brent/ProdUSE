@@ -8,12 +8,31 @@ import migrations from '../../db/migrations';
 import DbMigrationRunner from '../../db/DbMigrationRunner';
 import SQLiteProvider from '../../db/SQLiteProvider';
 
+// use when resetting the database
+import * as FileSystem from 'expo-file-system';
+
+const databaseName = 'SQLite/produsedb.db'; // Replace with your actual database filename
+
+async function resetDatabase() {
+
+  const databasePath = FileSystem.documentDirectory + databaseName;
+
+  try {
+    await FileSystem.deleteAsync(databasePath);
+    console.log('Database reset successfully!');
+
+  } catch (error) {
+    console.error('Error resetting database:', error);
+  }
+}
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [ready, setReady] = React.useState(false);
+  
   const migrateDbIfNeeded = async (db: SQLiteDatabase) => {
     try {
+      //resetDatabase();
       await new DbMigrationRunner(db).apply(migrations);
       console.log('All migrations applied.');
       setReady(true);
@@ -79,8 +98,16 @@ export default function TabLayout() {
                 ),
               }}
             />
-          </Tabs>
-         }
-    </SQLiteProvider>
+          </Tabs>}
+          </SQLiteProvider>
   );
 }
+
+
+/*<SQLiteProvider
+      databaseName = "produsedb.db"
+      onInit = {migrateDbIfNeeded}>
+        {ready && 
+         */
+
+/* */
