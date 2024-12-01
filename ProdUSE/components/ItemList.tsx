@@ -5,6 +5,13 @@ import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
 import { PerishableItem, PastItem, Recipe } from '../db/types';
 
+import fruitIcon from '../assets/images/fruitIcon-min.png';
+import vegetableIcon from '../assets/images/vegetableIcon-min.png';
+import dairyIcon from '../assets/images/dairyIcon-min.png';
+import meatIcon from '../assets/images/meatIcon-min.png';
+import otherIcon from '../assets/images/otherIcon-min.png';
+
+
 /*sources that I used
 https://reactnative.dev/docs/flatlist?language=typescript
 https://docs.expo.dev/versions/latest/sdk/image/#image
@@ -14,13 +21,14 @@ https://medium.com/@jujunsetiawan10/how-to-create-progress-bar-in-react-native-f
 https://reactnative.dev/docs/view
 */
 
-
+/*
 type ItemData = {
   id: string;
   title: string;
   imageUrl: string;
   progress: number; 
 };
+
 
 const DATA: ItemData[] = [
   {
@@ -43,7 +51,6 @@ const DATA: ItemData[] = [
   },
 ];
 
-/*
 type ItemProps = {
   item: ItemData;
   onPress: () => void;
@@ -93,11 +100,29 @@ type ItemParameters = {
   item_name?: string
 }
 
+const image = (category: string) => {
+    if (category == 'fruit'){
+      return fruitIcon;
+    }
+    else if (category == 'vegetable'){
+      return vegetableIcon;
+    }
+    else if (category == 'dairy'){
+      return dairyIcon;
+    }
+    else if (category == 'meat'){
+      return meatIcon;
+    }
+    else {
+      return otherIcon;
+    }
+};
+
 const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: ItemProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
-      <Image source={{ uri: item.image_url }} style={styles.image} />
-      <View style={styles.textContainer}>
+        <Image source={image(item.category)} style={styles.image} />      
+        <View style={styles.textContainer}>
         <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
         
         <View style={styles.progressContainer}>
@@ -149,8 +174,11 @@ const ItemList = ({search, item_name} : ItemParameters) => {
   const handleEdit = (id: string) => {
   };
 
-  const handleDelete = (id: string) => {
-  };
+  const handleDelete = React.useCallback(async (id: string) => {
+    client.deletePerishable(id);
+    setItems(await client.getPerishableItems());
+
+  }, [newItem]);
 
   //const renderItem = ({ item }: { item: ItemData }) => {
   const renderItem = ({ item }: { item: PerishableItem }) => {

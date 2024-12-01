@@ -5,7 +5,7 @@ const migration : DatabaseMigration = {
     name: 'create initial tables',
     async up(db: SQLiteDatabase): Promise<void> {
         await db.execAsync(`
-            
+
             CREATE TABLE IF NOT EXISTS perishableItems (
                 perishable_id INTEGER PRIMARY KEY NOT NULL, 
                 perishable_name TEXT NOT NULL, 
@@ -14,7 +14,7 @@ const migration : DatabaseMigration = {
                 days_in_fridge INTEGER DEFAULT 0, 
                 amount_used REAL DEFAULT 0,
                 category TEXT NOT NULL CHECK (category = "fruit" OR category = "vegetable" OR category = "dairy" OR category = "meat/fish" OR category = "other"),
-                image_url TEXT DEFAULT 'https://picsum.photos/seed/696/3000/2000'
+                image_url TEXT
                 );
             CREATE TABLE IF NOT EXISTS pastItems (
                 past_id INTEGER PRIMARY KEY NOT NULL, 
@@ -34,6 +34,7 @@ const migration : DatabaseMigration = {
             CREATE TABLE IF NOT EXISTS images (
                 category_name TEXT PRIMARY KEY NOT NULL,
                 image_path TEXT NOT NULL
+            );
         `);
     },
 };
