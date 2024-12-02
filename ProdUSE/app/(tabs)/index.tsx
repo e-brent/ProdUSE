@@ -8,14 +8,18 @@ export default function Index() {
 
   const [search, setSearch] = useState(false);
   const [searchName, setSearchName] = useState("");
-  const [update, setUpdate] = useState(0);
 
   const [filter, setFilter] = useState(false);
-  const [category, setCategory] = useState<string | null>(null);
-  const [sortOrder, setSort] = useState<'asc' | 'desc' | null>(null);
+
+  const [update, setUpdate] = useState(0);
+
+  const [showFilter, setShowFilter] = useState(false);
+  const [category, setCategory] = useState("");
+  const [sortOrder, setSort] = useState("");
 
 
   const searchSubmit = (text: string) => {
+    setFilter(false);
     setSearch(true);
     setSearchName(text);
     setUpdate(update + 1);
@@ -23,8 +27,15 @@ export default function Index() {
     console.log(update + ' ' + text);
   }
 
+  const filterSubmit = () => {
+    setShowFilter(false);
+    setFilter(true);
+    setSearch(false);
+    setUpdate(update + 1);
+  }
+
   const toggleFilter = () => {
-    setFilter(!filter);
+    setShowFilter(!showFilter);
   };
 
   return (
@@ -55,42 +66,42 @@ export default function Index() {
 
       </View>
 
-      {filter && (
+      {showFilter && (
         <View style={styles.filterContainer}>
           {/* Categories */}
           <Text style={styles.filterTitle}>Sort by Category</Text>
-          <TouchableOpacity onPress={() => setCategory('Fruit')}>
+          <TouchableOpacity onPress={() => setCategory('fruit')}>
             <Text
               style={[
                 styles.filterOption,
-                category === 'Fruit' ? styles.selectedOption : null,
+                category === 'fruit' ? styles.selectedOption : null,
               ]}
             >Fruit</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setCategory('Vegetable')}>
+          <TouchableOpacity onPress={() => setCategory('vegetable')}>
             <Text
               style={[
                 styles.filterOption,
-                category === 'Vegetable' ? styles.selectedOption : null,
+                category === 'vegetable' ? styles.selectedOption : null,
               ]}
             >Vegetable</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setCategory('Dairy')}>
+          <TouchableOpacity onPress={() => setCategory('dairy')}>
             <Text
               style={[
                 styles.filterOption,
-                category === 'Dairy' ? styles.selectedOption : null,
+                category === 'dairy' ? styles.selectedOption : null,
               ]}
             >Dairy</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setCategory('Meat')}>
+          <TouchableOpacity onPress={() => setCategory('meat')}>
             <Text
               style={[
                 styles.filterOption,
-                category === 'Meat' ? styles.selectedOption : null,
+                category === 'meat' ? styles.selectedOption : null,
               ]}
             >Meat</Text>
           </TouchableOpacity>
@@ -114,12 +125,21 @@ export default function Index() {
             >Oldest First</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => {
-            setCategory(null);
-            setSort(null);
-          }}>
-            <Text style={styles.clearFilter}>Clear Filters</Text>
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={() => {
+              setCategory("");
+              setSort("");
+              setFilter(false);
+            }}>
+              <Text style={styles.clearFilter}>Clear Filters</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              filterSubmit();
+            }}>
+              <Text style={styles.clearFilter}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+          
 
         </View>
       )}
@@ -137,8 +157,11 @@ export default function Index() {
       <View style={styles.list}>
         <ItemList
           key={update}
-          search={search}
+          search={search}          
           item_name={searchName}
+          filter={filter}
+          filterCategory={category}
+          filterOrder={sortOrder}
         >
         </ItemList>
       </View>
