@@ -97,7 +97,10 @@ type ItemProps = {
 
 type ItemParameters = {
   search: boolean,
-  item_name?: string
+  item_name?: string,
+  filter: boolean,
+  filterCategory: string,
+  filterOrder: string
 }
 
 const image = (category: string) => {
@@ -144,7 +147,7 @@ const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: I
 );
 
 //item_name?: string
-const ItemList = ({search, item_name} : ItemParameters) => {  
+const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : ItemParameters) => {  
   const [selectedId, setSelectedId] = useState<string>();
 
   const ctx = useSQLiteContext();
@@ -156,9 +159,13 @@ const ItemList = ({search, item_name} : ItemParameters) => {
     if (newItem.length === 0) {
       console.log('prepare items');
 
-      if (search){
+      if (search && item_name?.localeCompare("") != 0){
         console.log('searching');
         setItems(await client.searchPerishableItems(item_name));
+      }
+      else if (filter){
+        console.log('filtering');
+        setItems(await client.filterPerishable(filterCategory, filterOrder));
       }
       else {
         console.log('get all items');
