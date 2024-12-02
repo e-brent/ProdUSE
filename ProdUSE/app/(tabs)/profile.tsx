@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import ProductDetail from '@/components/ProductDetails';
 
 export default function Profile() {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={styles.text}>Hello, this is the Profile page</Text>
+      <ProductDetail>
+      </ProductDetail>
       </View>
     </SafeAreaView>
   );
