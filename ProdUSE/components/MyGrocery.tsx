@@ -5,6 +5,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from 'expo-router';
 
+import { useSQLiteContext } from '../db/SQLiteProvider';
+import Operations from '../db/operations';
+import { PerishableItem, PastItem, Recipe } from '../db/types';
+
 /* 
 Sources of have used 
 https://reactnative.dev/docs/button
@@ -14,21 +18,34 @@ https://docs.expo.dev/versions/latest/sdk/date-time-picker/
 */
 
 const AddGroceryItems = () => {
-  const [text, onChangeText] = useState('');
-  const [number, onChangeNumber] = useState('');
+  const [perishable_name, onChangeText] = useState('');
+  const [amount_used, onChangeNumber] = useState('');
   const [note, onChangeNote] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [date_purchased, setDate] = useState(new Date());
 
   const router = useRouter();
 
+  const ctx = useSQLiteContext();
+  const client = new Operations(ctx);
+
+  //create context and new operations etc., itemList file with imports at the top
+
   const onChange = (e, selectedDate) => {
-    setDate(selectedDate || date);
+    setDate(selectedDate || date_purchased);
   };
 
-  const onSubmit = () => {
-    alert("Item added!")
-    router.back();
-  }
+  const onSubmit = async () => {
+    try { 
+      await client.addPerishableItem(perishable_name, date_purchased, parseFloat(amount_used) || 0,'fruit');
+      const items = await client.getPerishableItems(); // print items in db in console
+      console.log('Current items in database:', items);
+      alert("Item added!");
+      router.back();
+    } catch (error) {
+      alert("Failed to add item");
+      console.error(error);
+    }
+  };
 
   return (
     <SafeAreaProvider>
@@ -42,7 +59,7 @@ const AddGroceryItems = () => {
               <TextInput
                 style={styles.input}
                 onChangeText={onChangeText}
-                value={text}
+                value={perishable_name}
                 placeholder="Enter item name"
                 placeholderTextColor="#999"
               />
@@ -52,14 +69,14 @@ const AddGroceryItems = () => {
               <Text style={styles.label}>Purchase Date</Text>
               <View style={styles.row}>
                 <DateTimePicker
-                  value={date}
+                  value={date_purchased}
                   mode="date"
                   is24Hour={true}
                   display="default"
                   onChange={onChange}
                   style={styles.datePicker}
                 />
-                <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
+                <Text style={styles.dateText}>{date_purchased.toLocaleDateString()}</Text>
               </View>
             </View>
 
@@ -68,7 +85,7 @@ const AddGroceryItems = () => {
               <TextInput
                 style={styles.input}
                 onChangeText={onChangeNumber}
-                value={number}
+                value={amount_used}
                 placeholder="Enter amount used"
                 placeholderTextColor="#999"
                 keyboardType="numeric"

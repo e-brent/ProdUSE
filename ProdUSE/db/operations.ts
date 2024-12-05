@@ -88,7 +88,7 @@ class Operations {
     // get category image from table -- helper function for adding new items to the table
     // Emme
     async getImagePath(category: string): Promise<string | null> {
-        const imagePath = await this.db.getFirstAsync<{ image_path: string }>('SELECT image_path FROM images WHERE category LIKE "?"', [category]);
+        const imagePath = await this.db.getFirstAsync<{ image_path: string }>('SELECT image_path FROM images WHERE category_name LIKE "?"', [category]);
 
         if (!imagePath) {
             return 'ProdUSE/assets/images/otherIcon.png';
@@ -116,12 +116,22 @@ class Operations {
         // convert date purchased to string
         let date = date_purchased.toString();
 
-        await this.db.runAsync(
-            'INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (?, "?", "?", " ", ?, ?, "?", "?"',
+        console.log(id);
+        console.log(perishable_name);
+        console.log(date);
+        console.log(amount_used);
+        console.log('category:' + category);
+        console.log(image);
+
+        let query = `INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (${id}, "${perishable_name}", "${date}", " ", 0, ${amount_used}, "${category}", "${image}")`;
+
+        /*await this.db.runAsync(
+            `INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (?, '?', '?', ' ', 0, ?, '?', '?')`,
             [id, perishable_name, date, amount_used, category, image]
-        );
+        );*/
 
 
+        await this.db.runAsync(query);
     }
 
     // edit item in perishableItems table

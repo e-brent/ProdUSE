@@ -13,7 +13,7 @@ const migration : DatabaseMigration = {
                 expiration_date TEXT, 
                 days_in_fridge INTEGER DEFAULT 0, 
                 amount_used REAL DEFAULT 0,
-                category TEXT NOT NULL CHECK (category = "fruit" OR category = "vegetable" OR category = "dairy" OR category = "meat/fish" OR category = "other"),
+                category TEXT NOT NULL CHECK (category IN ('fruit', 'vegetable', 'dairy', 'meat/fish', 'other')),
                 image_url TEXT
                 );
             CREATE TABLE IF NOT EXISTS pastItems (
