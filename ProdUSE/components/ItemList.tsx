@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
@@ -155,7 +156,9 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   const [items, setItems] = useState<PerishableItem[]>([]);
   const [newItem, setNewItem] = useState('');
 
+  /*
   const prepareItems = React.useCallback(async () => {
+
     if (newItem.length === 0) {
       console.log('prepare items');
 
@@ -177,6 +180,40 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   React.useEffect(() => {
     void prepareItems();
   }, [prepareItems]);
+  */
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const prepareItems = async() => {
+        if (newItem.length === 0) {
+          console.log('prepare items');
+    
+          if (search && item_name?.localeCompare("") != 0){
+            console.log('searching');
+            setItems(await client.searchPerishableItems(item_name));
+          }
+          else if (filter){
+            console.log('filtering');
+            setItems(await client.filterPerishable(filterCategory, filterOrder));
+          }
+          else {
+            console.log('get all items');
+            setItems(await client.getPerishableItems());
+          }
+        }
+      };
+
+      prepareItems();
+
+      return () => {
+        isActive = false;
+      };
+
+    }, [newItem])
+  );
+
 
   const handleEdit = (id: string) => {
   };
