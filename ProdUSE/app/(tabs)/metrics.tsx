@@ -9,6 +9,8 @@ import dairyIcon from '../../assets/images/dairyIcon-min.png';
 import meatIcon from '../../assets/images/meatIcon-min.png';
 import otherIcon from '../../assets/images/otherIcon-min.png';
 import badge from '../../assets/images/badgeicon-min.png';
+import appleIcon from '../../assets/images/appleIcon-min.png';
+import stawberryIcon from '../../assets/images/strawberryIcon-min.png';
 
 
 // Define types for our metric data
@@ -157,7 +159,7 @@ export default MyMetrics;
 
 const styles = StyleSheet.create({
 background: {
-  backgroundColor: '#5c5346',
+  backgroundColor: '#292818',
   flex: 1,
 },
 headerContainer: {

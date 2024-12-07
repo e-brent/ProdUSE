@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   background: {
-    backgroundColor: 'black',
+    backgroundColor: '#292818',
     flex: 1,
   },
   searchContainer: {
