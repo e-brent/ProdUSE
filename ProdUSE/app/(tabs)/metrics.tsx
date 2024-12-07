@@ -7,6 +7,7 @@ import vegetableIcon from '../../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../../assets/images/dairyIcon-min.png';
 import meatIcon from '../../assets/images/meatIcon-min.png';
 import otherIcon from '../../assets/images/otherIcon-min.png';
+import badge from '../../assets/images/badgeicon-min.png';
 
 
 export default function myMetrics() {
@@ -28,38 +29,40 @@ export default function myMetrics() {
     <View style={styles.container}>
       <View style={styles.used}>
         <Text style={styles.usage}>Most Used</Text>
-        {/* <Image source={meatIcon} style={styles.iconImage}></Image> */}
+        <Image source={meatIcon} style={styles.iconImage} />
         <Text style={styles.amount}>Meat</Text>
       </View>
       <View style={styles.used}>
         <Text style={styles.usage}>Least Used</Text>
-        {/* <Image source={vegetableIcon} style={styles.iconImage}></Image> */}
+        <Image source={vegetableIcon} style={styles.iconImage} />
         <Text style={styles.amount}>Vegetables</Text>
       </View>
     </View>
     
     <View style={styles.container}>
-
       <View style={styles.used}>
         <Text style={styles.usage}>Most Purchased</Text>
         <View style={styles.iconContainer}>
-        {/* <Image source={dairyIcon} style={styles.iconImage}></Image> */}
+        <Image source={dairyIcon} style={styles.iconImage} />
         </View>
         <Text style={styles.amount}>Eggs</Text>
       </View>
       <View style={styles.used}>
         <Text style={styles.usage}>Least Purchased</Text>
         <View style={styles.iconContainer}>
-        {/* <Image source={fruitIcon} style={styles.iconImage}></Image> */}
+        <Image source={fruitIcon} style={styles.iconImage} />
         </View>
         <Text style={styles.amount}>Blueberries</Text>
       </View>
-
     </View>
 
-    <View style={styles.container}>
+    <View style={styles.badgeContainer}>
+      <Image
+        source={badge}
+        style={styles.badgeImage}
+        />
+        <Text style={styles.badgeText}>First Item Logged</Text>
     </View>
-    
   </View>
   );
 }
@@ -143,4 +146,20 @@ iconImage: {
   height: 70,
   backgroundColor: 'transparent'
 },
+badgeContainer:{
+  // flexDirection: 'row',
+  padding: 15,
+  alignItems: 'center'
+},
+badgeText: {
+  color: 'white',
+  padding: 5,
+  fontStyle: 'italic',
+  textAlign: 'center'
+},
+badgeImage: {
+  width: 70,
+  height: 95,
+  justifyContent: 'center'
+}
 });
