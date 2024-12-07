@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native';
-import {Link} from 'expo-router';
+import { Link } from 'expo-router';
 import ItemList from '../../components/ItemList';
 
 import React, { useState } from 'react';
@@ -34,6 +34,20 @@ export default function Index() {
     setUpdate(update + 1);
   }
 
+  const applyFilters = () => {
+    setShowFilter(false);
+    setFilter(true);
+    setSearch(false);
+    setUpdate(update + 1);
+  }
+
+  const clearFilters = () => {
+    setCategory("");
+    setSort("");
+    setFilter(false);
+    setShowFilter(false);
+  }
+
   const toggleFilter = () => {
     setShowFilter(!showFilter);
   };
@@ -58,10 +72,10 @@ export default function Index() {
         </View>
         {/* Right Image (Plus Sign) */}
         <Link href='./addItem' style={styles.iconContainer}>
-              <Image
-                source={require('../../assets/images/plusicon.png')}  // Plus sign 
-                style={styles.iconImage}
-              />
+          <Image
+            source={require('../../assets/images/plusicon.png')}  // Plus sign 
+            style={styles.iconImage}
+          />
         </Link>
 
       </View>
@@ -105,8 +119,8 @@ export default function Index() {
               ]}
             >Meat</Text>
           </TouchableOpacity>
-          
-          <Text style={styles.filterTitle}>Sort By Date</Text> 
+
+          <Text style={styles.filterTitle}>Sort By Date</Text>
           <TouchableOpacity onPress={() => setSort('asc')}>
             <Text
               style={[
@@ -126,22 +140,15 @@ export default function Index() {
           </TouchableOpacity>
 
           <View>
-            <TouchableOpacity onPress={() => {
-              setCategory("");
-              setSort("");
-              setFilter(false);
-            }}>
+            <TouchableOpacity onPress={clearFilters}>
               <Text style={styles.clearFilter}>Clear Filters</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              filterSubmit();
-            }}>
-              <Text style={styles.clearFilter}>Submit</Text>
+
+            <TouchableOpacity onPress={applyFilters}>
+              <Text style={styles.applyFilter}>Apply Filters</Text>
             </TouchableOpacity>
           </View>
-          
-
-        </View>
+      </View>
       )}
 
       <View style={styles.searchContainer}>
@@ -157,7 +164,7 @@ export default function Index() {
       <View style={styles.list}>
         <ItemList
           key={update}
-          search={search}          
+          search={search}
           item_name={searchName}
           filter={filter}
           filterCategory={category}
@@ -166,7 +173,6 @@ export default function Index() {
         </ItemList>
       </View>
     </View>
-
   );
 }
 
@@ -230,7 +236,7 @@ const styles = StyleSheet.create({
     left: '10%',
     right: '10%',
     borderWidth: 1,
-    borderColor:'#e0e0e0',
+    borderColor: '#e0e0e0',
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
@@ -238,7 +244,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   filterTitle: {
-    color:'#41521f',
+    color: '#41521f',
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,
@@ -257,7 +263,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F18208',
   },
+  
   clearFilter: {
+    fontSize: 16,
+    color: 'red',
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  applyFilter: {
     fontSize: 16,
     color: 'red',
     marginTop: 20,
@@ -267,5 +280,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
