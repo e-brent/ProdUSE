@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Text, View, Button, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, TextInput, Text, View, Button, ScrollView, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select'; // Import the picker
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from "expo-status-bar";
@@ -7,37 +8,26 @@ import { useRouter } from 'expo-router';
 
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
-import { PerishableItem, PastItem, Recipe } from '../db/types';
-
-/* 
-Sources of have used 
-https://reactnative.dev/docs/button
-https://reactnative.dev/docs/textinput
-https://github.com/chelseafarley/DateTimePickerTutorialReactNative/tree/main
-https://docs.expo.dev/versions/latest/sdk/date-time-picker/
-*/
 
 const AddGroceryItems = () => {
   const [perishable_name, onChangeText] = useState('');
   const [amount_used, onChangeNumber] = useState('');
   const [note, onChangeNote] = useState('');
   const [date_purchased, setDate] = useState(new Date());
+  const [category, setCategory] = useState(''); // State for selected category
+  
 
   const router = useRouter();
-
   const ctx = useSQLiteContext();
   const client = new Operations(ctx);
-
-  //create context and new operations etc., itemList file with imports at the top
-
   const onChange = (e, selectedDate) => {
     setDate(selectedDate || date_purchased);
   };
 
   const onSubmit = async () => {
-    try { 
-      await client.addPerishableItem(perishable_name, date_purchased, parseFloat(amount_used) || 0,'fruit');
-      const items = await client.getPerishableItems(); // print items in db in console
+    try {
+      await client.addPerishableItem(perishable_name, date_purchased, parseFloat(amount_used) || 0, category); // Include category
+      const items = await client.getPerishableItems();
       console.log('Current items in database:', items);
       alert("Item added!");
       router.back();
@@ -51,9 +41,14 @@ const AddGroceryItems = () => {
     <SafeAreaProvider>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={styles.container}>
+          {/* Back Button */}
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Text style={styles.backButtonText}>{'< Back'}</Text>
+          </TouchableOpacity>
           <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-            {/* Title */}
             <Text style={styles.title}>Add Grocery Item</Text>
+            
+            {/* Item Name */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Item Name</Text>
               <TextInput
@@ -65,6 +60,31 @@ const AddGroceryItems = () => {
               />
             </View>
 
+            {/* Category Dropdown */}
+              <View style={styles.formGroup}>
+              <Text style={styles.label}>Category</Text>
+              <RNPickerSelect
+                onValueChange={(value) => setCategory(value)}
+                items={[
+                  { label: 'Fruit', value: 'fruit' },
+                  { label: 'Vegetable', value: 'vegetable' },
+                  { label: 'Dairy', value: 'dairy' },
+                  { label: 'Meat', value: 'meat' },
+                  { label: 'Grain', value: 'grain' },
+                ]}
+                placeholder={{
+                  label: 'Select a category...',
+                  value: null,
+                  color: '999',
+                }}
+                style={{
+                  inputAndroid: styles.input,
+                  inputIOS: styles.input,
+                }}
+              />
+            </View>
+
+            {/* Purchase Date */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Purchase Date</Text>
               <View style={styles.row}>
@@ -80,6 +100,7 @@ const AddGroceryItems = () => {
               </View>
             </View>
 
+            {/* Amount Used */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Amount Used</Text>
               <TextInput
@@ -92,6 +113,7 @@ const AddGroceryItems = () => {
               />
             </View>
 
+            {/* Notes */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Notes</Text>
               <TextInput
@@ -104,12 +126,9 @@ const AddGroceryItems = () => {
               />
             </View>
 
+            {/* Submit Button */}
             <View style={styles.buttonContainer}>
-              <Button
-                title="Submit"
-                color="green"
-                onPress={() => onSubmit()} // This is the submit feedback - On Press
-              />
+              <Button title="Submit" color="green" onPress={() => onSubmit()} />
             </View>
             <StatusBar style="auto" />
           </ScrollView>
@@ -122,7 +141,6 @@ const AddGroceryItems = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f4f8',
   },
   scrollContainer: {
     padding: 30,
@@ -182,6 +200,20 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 8,
     overflow: 'hidden',
+  },
+  backButton: {
+    marginTop: 20,
+    marginLeft: 15,
+    padding: 10,
+    backgroundColor: '#ddd',
+    borderRadius: 5,
+    width: 80,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
