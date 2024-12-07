@@ -27,13 +27,6 @@ export default function Index() {
     console.log(update + ' ' + text);
   }
 
-  const filterSubmit = () => {
-    setShowFilter(false);
-    setFilter(true);
-    setSearch(false);
-    setUpdate(update + 1);
-  }
-
   const applyFilters = () => {
     setShowFilter(false);
     setFilter(true);

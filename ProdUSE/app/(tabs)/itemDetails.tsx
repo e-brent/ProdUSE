@@ -9,7 +9,7 @@ export default function ItemDetails() {
 
   const { id, update } = useLocalSearchParams<{id: string; update: string;}>();
 
-  console.log(id);
+  //console.log(id);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,6 +17,7 @@ export default function ItemDetails() {
         <ProductDetail
           key={update}
           item_id={id}
+          update = {update}
         >
         </ProductDetail>
       </View>

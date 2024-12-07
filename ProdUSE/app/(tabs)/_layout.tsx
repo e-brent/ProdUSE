@@ -78,12 +78,9 @@ export default function TabLayout() {
               }}
             />
             <Tabs.Screen
-              name="pantry" 
+              name="editItem" 
               options={{
-                title: 'pantry',
-                tabBarIcon: ({ color, focused }) => (
-                  <TabBarIcon name={focused ? 'basket' : 'basket-outline'} color={color} />
-                ),
+                href:null,
               }}
             />
             <Tabs.Screen
@@ -92,15 +89,6 @@ export default function TabLayout() {
                 title: 'metrics',
                 tabBarIcon: ({ color, focused }) => (
                   <TabBarIcon name={focused ? 'analytics' : 'analytics-outline'} color={color} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="profile" 
-              options={{
-                title: 'profile',
-                tabBarIcon: ({ color, focused }) => (
-                  <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
                 ),
               }}
             />

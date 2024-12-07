@@ -13,7 +13,7 @@ import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useRouter } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 
 type ItemData = {
     id: string;
@@ -67,13 +67,15 @@ const image = (category: string) => {
 };
 
 type DetailParams ={
-  item_id: string
+  item_id: string;
+  update: string;
 }
 
-const ProductDetail = ({item_id} : DetailParams) => {
+const ProductDetail = ({item_id, update} : DetailParams) => {
   const ctx = useSQLiteContext();
   const client = new Operations(ctx);
   const [item, setItem] = useState<PerishableItem | null>();
+  const [updater, setUpdater] = useState(update);
 
   const router = useRouter();
 
@@ -87,6 +89,7 @@ const ProductDetail = ({item_id} : DetailParams) => {
   const daysInFridge = calculateDaysInFridge(ITEM.purchasedate);
 
   const handleEdit = () => {
+    setUpdater(updater + 1);
     console.log('Edit button clicked');
   };
 
@@ -123,13 +126,13 @@ const ProductDetail = ({item_id} : DetailParams) => {
     
     
   if (item){
-    console.log(item.perishable_name);
+
     return (
       <SafeAreaView style={styles.container}>
       {/* Edit Icon */}
-      <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+      <Link href={{pathname: './editItem', params: {id: item.perishable_id, name: item.perishable_name, amount : item.amount_used, date : item.date_purchased.toString(), category : item.category, update: updater}}} style={styles.editIcon} onPress={handleEdit}>
         <Icon name="edit" size={30} color="black" />
-      </TouchableOpacity>
+      </Link>
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
@@ -137,7 +140,7 @@ const ProductDetail = ({item_id} : DetailParams) => {
 
       <View style={styles.item}>
         <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
-        <Text style={styles.title}>{ITEM.title}</Text>
+        <Text style={styles.title}>{item.perishable_name}</Text>
         <Text style={styles.paragraphtitle}>Purchase Date: {ITEM.purchasedate}</Text>
         <Text style={styles.paragraphtitle}>Days in Fridge: {daysInFridge}</Text>
 
