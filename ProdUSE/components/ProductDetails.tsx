@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View, FlatList} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,29 +11,33 @@ import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
-=======
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View, FlatList,} from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
->>>>>>> Stashed changes
 
 type ItemData = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  purchasedate: string; 
-  currentDate: string;
-  progress: number;
-  waysToEat: string[];
-};
+    id: string;
+    title: string;
+    imageUrl: string;
+    brought: number;
+    quantity: number;
+    expiration: string;
+    purchasedate: string; 
+    currentDate: string;
+    progress: number;
+    waysToEat: string [];
+
+  };
 
 const ITEM: ItemData = {
   id: '3',
   title: 'Apples',
   imageUrl: 'https://picsum.photos/seed/696/3000/2000',
-  purchasedate: '12/05/24',
-  currentDate: '12/09/24',
+  brought: 2,
+  quantity: 9,
+  expiration: '12/5/24',
+  purchasedate: '12/5/24',
+  currentDate: '12/5/24',
   progress: 0.5,
   waysToEat: [
     'Slice and serve with peanut butter.',
@@ -45,7 +48,6 @@ const ITEM: ItemData = {
   ],
 };
 
-<<<<<<< Updated upstream
 const image = (category: string) => {
   if (category == 'fruit'){
     return fruitIcon;
@@ -73,19 +75,15 @@ const ProductDetail = ({item_id} : DetailParams) => {
   const client = new Operations(ctx);
   const [item, setItem] = useState<PerishableItem | null>();
 
-  const handleGoneBad = (id: string) => {
-    console.log(`Item ${id} marked as gone bad.`);
-=======
-const router = useRouter();
+  const router = useRouter();
 
-const calculateDaysInFridge = (purchaseDateString: string) => {
-  const purchaseDate = new Date(purchaseDateString);
-  const currentDate = new Date();
-  const timeDiff = currentDate.getTime() - purchaseDate.getTime();
-  return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 1 day = 86400000 ms
-};
+  const calculateDaysInFridge = (purchaseDateString: string) => {
+    const purchaseDate = new Date(purchaseDateString);
+    const currentDate = new Date();
+    const timeDiff = currentDate.getTime() - purchaseDate.getTime();
+    return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 1 day = 86400000 ms
+  };
 
-const ProductDetail = () => {
   const daysInFridge = calculateDaysInFridge(ITEM.purchasedate);
 
   const handleEdit = () => {
@@ -94,7 +92,6 @@ const ProductDetail = () => {
 
   const handleThrowOut = (id: string) => {
     console.log(`Item ${id} marked as throw out.`);
->>>>>>> Stashed changes
   };
 
   const handleRecipe = (id: string) => {
@@ -105,7 +102,6 @@ const ProductDetail = () => {
     console.log(`Item ${id} marked as used.`);
   };
 
-<<<<<<< Updated upstream
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
@@ -123,10 +119,13 @@ const ProductDetail = () => {
       };
 
     }, [setItem])
-=======
-  return (
+  );
     
-    <SafeAreaView style={styles.container}>
+    
+  if (item){
+    console.log(item.perishable_name);
+    return (
+      <SafeAreaView style={styles.container}>
       {/* Edit Icon */}
       <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
         <Icon name="edit" size={30} color="black" />
@@ -181,54 +180,6 @@ const ProductDetail = () => {
         </View>
       </View>
     </SafeAreaView>
->>>>>>> Stashed changes
-  );
-
-  if (item){
-    console.log(item.perishable_name);
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.item}>
-          <Image source={image(item.category)} style={styles.image} />
-          <Text style={styles.title}>{item.perishable_name}</Text>
-          <Text style={styles.subtitle}>
-            Brought: {ITEM.brought} 
-          </Text>
-          <Text style={styles.subtitle}>
-           Quantity: {ITEM.quantity}
-          </Text>
-          <Text style={styles.subtitle}> Expiration: {ITEM.expiration}</Text>
-          <View style={styles.progressContainer}>
-            <View style={[styles.progressBar, { width: `${ITEM.progress * 100}%`}]} />
-          </View>
-          <Text style={styles.percentageText}>{Math.round(ITEM.progress * 100)}% Used</Text>
-  
-          <View style={styles.listContainer}>
-          <Text style={styles.subtitle}>Ways to Eat:</Text>
-          <FlatList
-              data={ITEM.waysToEat}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-              <View style={styles.bulletItem}>
-                  <Text style={styles.bulletPoint}>{'\u2022'}</Text>
-                  <Text style={styles.bulletText}>{item}</Text>
-              </View>
-              )}
-          />  
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => handleGoneBad(ITEM.id)} style={styles.button}>
-              <Text style={styles.buttonText}>Gone Bad</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleRecipe(ITEM.id)} style={styles.button}>
-              <Text style={styles.buttonText}>Recipe</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleUsed(ITEM.id)} style={styles.button}>
-              <Text style={styles.buttonText}>Used</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </SafeAreaView>
     );
   }
   else {
@@ -257,10 +208,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   item: {
-    padding: 20,
+    padding: 20, 
     borderRadius: 10,
     alignItems: 'center',
-  },
+    },
+
   image: {
     width: 150,
     height: 150,
@@ -273,16 +225,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 4,
+    textAlign: 'center',
+  },
   progressContainer: {
-    height: 35,
-    width: 300,
+    height: 20, 
     backgroundColor: '#e0e0e0',
     borderRadius: 5,
-    marginTop: 5,
+    marginTop: 5, 
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#C6DEA6',
+    backgroundColor: '#C6DEA6', 
     borderRadius: 5,
   },
   percentageText: {
@@ -327,11 +284,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-<<<<<<< Updated upstream
-  subtitle2: {
-=======
   paragraphtitle: {
->>>>>>> Stashed changes
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
@@ -349,7 +302,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
     fontWeight: 'bold',
-  },
+  },  
 });
 
 export default ProductDetail;
