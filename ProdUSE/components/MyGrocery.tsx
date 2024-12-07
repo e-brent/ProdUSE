@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Text, View, Button, ScrollView, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select'; // Import the picker
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from 'expo-router';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
@@ -16,6 +17,13 @@ const AddGroceryItems = () => {
   const [date_purchased, setDate] = useState(new Date());
   const [category, setCategory] = useState(''); // State for selected category
   
+  const categoryData = [
+    {key: '1', value: 'fruit'},
+    {key: '2', value: 'vegetable'},
+    {key: '3', value: 'dairy'},
+    {key: '4', value: 'meat/fish'},
+    {key: '5', value: 'other'},
+  ];
 
   const router = useRouter();
   const ctx = useSQLiteContext();
@@ -61,28 +69,15 @@ const AddGroceryItems = () => {
             </View>
 
             {/* Category Dropdown */}
-              <View style={styles.formGroup}>
-              <Text style={styles.label}>Category</Text>
-              <RNPickerSelect
-                onValueChange={(value) => setCategory(value)}
-                items={[
-                  { label: 'Fruit', value: 'fruit' },
-                  { label: 'Vegetable', value: 'vegetable' },
-                  { label: 'Dairy', value: 'dairy' },
-                  { label: 'Meat', value: 'meat' },
-                  { label: 'Grain', value: 'grain' },
-                ]}
-                placeholder={{
-                  label: 'Select a category...',
-                  value: null,
-                  color: '999',
-                }}
-                style={{
-                  inputAndroid: styles.input,
-                  inputIOS: styles.input,
-                }}
-              />
-            </View>
+            <View style={styles.formGroup}>
+                <Text style={styles.label}>Category</Text>
+                <SelectList
+                  setSelected={(val) => setCategory(val)}
+                  data={categoryData}
+                  save="value"
+                  boxStyles = {{backgroundColor: 'white', borderColor: 'lightgrey'}}
+                />
+              </View>
 
             {/* Purchase Date */}
             <View style={styles.formGroup}>

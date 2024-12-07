@@ -54,14 +54,14 @@ class Operations {
     // get specific item from the perishableItems table by id -- will be used for the item details page
     // Emme
     async getPerishableItem(id: number): Promise<PerishableItem | null> {   
-     
+             
         const rawValue = await this.db.getFirstAsync<
             Omit<PerishableItem, 'date_purchased' | 'expiration_date'> & {
                 date_purchased: string;
                 expiration_date: string;
             }
         >('SELECT perishable_id, perishable_name, date_purchased as "date_purchased", expiration_date as "expiration_date", days_in_fridge, amount_used, category, image_url FROM perishableItems WHERE perishable_id = ?', [id]);
-        
+
         if (!rawValue) {
             return null;
         }
@@ -136,6 +136,43 @@ class Operations {
     }
 
     // edit item in perishableItems table
+    async editPerishableItem(perishable_id: number, perishable_name: string, date_purchased: Date, amount_used: number, category: string): Promise<void> {
+
+        const item = await this.getPerishableItem(perishable_id);
+        console.log(item);
+
+        if (perishable_name != item?.perishable_name){
+            console.log('updating name to: ' + perishable_name);
+            await this.db.runAsync(
+                'UPDATE perishableItems SET perishable_name = ? WHERE perishable_id = ?', [perishable_name, perishable_id]
+            );
+        }
+        if (date_purchased != item?.date_purchased){
+            // convert date purchased to string
+            let date = date_purchased.toDateString();
+
+            console.log('updating date to: ' + date);
+
+            await this.db.runAsync(
+                'UPDATE perishableItems SET date_purchased = ? WHERE perishable_id = ?', [date, perishable_id]
+            );
+        }
+        if (amount_used != item?.amount_used){
+            console.log('updating amount to: ' + amount_used);
+
+            await this.db.runAsync(
+                'UPDATE perishableItems SET amount_used = ? WHERE perishable_id = ?', [amount_used, perishable_id]
+            );   
+        }
+        if (category != item?.category){
+            console.log('updating category to: ' + category);
+
+            await this.db.runAsync(
+                'UPDATE perishableItems SET category = ? WHERE perishable_id = ?', [category, perishable_id]
+            );
+        }
+    }
+
     // edit amount_used
     // Kyle
     async editAmountUsed(perishable_id: number, amount_used: number): Promise<void> {

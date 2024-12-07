@@ -2,7 +2,7 @@ import { StyleSheet, Image, Platform, View} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import AddGroceryItems from '@/components/MyGrocery';
 
-export default function myMetrics() {
+export default function addItem() {
   return (
    <View style = {styles.container}>
     <ThemedText type= "title"> Hello World</ThemedText>
