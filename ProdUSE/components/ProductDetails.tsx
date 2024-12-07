@@ -1,5 +1,16 @@
-
+import React, { useState } from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View, FlatList} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
+import { useSQLiteContext } from '../db/SQLiteProvider';
+import Operations from '../db/operations';
+import { PerishableItem, PastItem, Recipe } from '../db/types';
+
+import fruitIcon from '../assets/images/fruitIcon-min.png';
+import vegetableIcon from '../assets/images/vegetableIcon-min.png';
+import dairyIcon from '../assets/images/dairyIcon-min.png';
+import meatIcon from '../assets/images/meatIcon-min.png';
+import otherIcon from '../assets/images/otherIcon-min.png';
 
 type ItemData = {
   id: string;
@@ -29,7 +40,33 @@ const ITEM: ItemData = {
   ],
 };
 
-const ProductDetail = () => {
+const image = (category: string) => {
+  if (category == 'fruit'){
+    return fruitIcon;
+  }
+  else if (category == 'vegetable'){
+    return vegetableIcon;
+  }
+  else if (category == 'dairy'){
+    return dairyIcon;
+  }
+  else if (category == 'meat'){
+    return meatIcon;
+  }
+  else {
+    return otherIcon;
+  }
+};
+
+type DetailParams ={
+  item_id: string
+}
+
+const ProductDetail = ({item_id} : DetailParams) => {
+  const ctx = useSQLiteContext();
+  const client = new Operations(ctx);
+  const [item, setItem] = useState<PerishableItem | null>();
+
   const handleGoneBad = (id: string) => {
     console.log(`Item ${id} marked as gone bad.`);
   };
@@ -42,50 +79,81 @@ const ProductDetail = () => {
     console.log(`Item ${id} marked as used.`);
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.item}>
-        <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
-        <Text style={styles.title}>{ITEM.title}</Text>
-        <Text style={styles.subtitle}>
-          Brought: {ITEM.brought} 
-        </Text>
-        <Text style={styles.subtitle}>
-         Quantity: {ITEM.quantity}
-        </Text>
-        <Text style={styles.subtitle}> Expiration: {ITEM.expiration}</Text>
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${ITEM.progress * 100}%`}]} />
-        </View>
-        <Text style={styles.percentageText}>{Math.round(ITEM.progress * 100)}% Used</Text>
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
 
-        <View style={styles.listContainer}>
-        <Text style={styles.subtitle}>Ways to Eat:</Text>
-        <FlatList
-            data={ITEM.waysToEat}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-            <View style={styles.bulletItem}>
-                <Text style={styles.bulletPoint}>{'\u2022'}</Text>
-                <Text style={styles.bulletText}>{item}</Text>
-            </View>
-            )}
-        />  
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => handleGoneBad(ITEM.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Gone Bad</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleRecipe(ITEM.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Recipe</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleUsed(ITEM.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Used</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+      const getItem = async() => {
+        console.log('getting item details');
+        let id = parseInt(item_id);
+        setItem(await client.getPerishableItem(id));
+      }
+
+      getItem();
+
+      return () => {
+        isActive = false;
+      };
+
+    }, [setItem])
   );
+
+  if (item){
+    console.log(item.perishable_name);
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.item}>
+          <Image source={image(item.category)} style={styles.image} />
+          <Text style={styles.title}>{item.perishable_name}</Text>
+          <Text style={styles.subtitle}>
+            Brought: {ITEM.brought} 
+          </Text>
+          <Text style={styles.subtitle}>
+           Quantity: {ITEM.quantity}
+          </Text>
+          <Text style={styles.subtitle}> Expiration: {ITEM.expiration}</Text>
+          <View style={styles.progressContainer}>
+            <View style={[styles.progressBar, { width: `${ITEM.progress * 100}%`}]} />
+          </View>
+          <Text style={styles.percentageText}>{Math.round(ITEM.progress * 100)}% Used</Text>
+  
+          <View style={styles.listContainer}>
+          <Text style={styles.subtitle}>Ways to Eat:</Text>
+          <FlatList
+              data={ITEM.waysToEat}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+              <View style={styles.bulletItem}>
+                  <Text style={styles.bulletPoint}>{'\u2022'}</Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+              </View>
+              )}
+          />  
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={() => handleGoneBad(ITEM.id)} style={styles.button}>
+              <Text style={styles.buttonText}>Gone Bad</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleRecipe(ITEM.id)} style={styles.button}>
+              <Text style={styles.buttonText}>Recipe</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleUsed(ITEM.id)} style={styles.button}>
+              <Text style={styles.buttonText}>Used</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+  else {
+    return(
+      <SafeAreaView>
+        <Text style = {styles.title}>Unable to retrieve item</Text>
+      </SafeAreaView>
+    )
+  }
+
+  
 };
 
 const styles = StyleSheet.create({
@@ -173,7 +241,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  subtitle: {
+  subtitle2: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,

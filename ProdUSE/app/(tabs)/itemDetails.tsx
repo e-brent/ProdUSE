@@ -1,27 +1,30 @@
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { useLocalSearchParams, Link } from 'expo-router';
+import React, { useState } from 'react';
 
 import ProductDetail from '@/components/ProductDetails';
 
 
-export default function ItemDetails(id: string) {
+export default function ItemDetails() {
 
-  const { params } = useLocalSearchParams();
-  //const id = params[0];
+  const { id, update } = useLocalSearchParams<{id: string; update: string;}>();
 
-  console.log(params);
-  
+  console.log(id);
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
-      <ProductDetail
-        item_id={id}
-      >
-      </ProductDetail>
+        <ProductDetail
+          key={update}
+          item_id={id}
+        >
+        </ProductDetail>
       </View>
     </SafeAreaView>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
