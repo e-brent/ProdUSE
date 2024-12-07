@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { Link } from 'expo-router';
 
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
@@ -22,71 +23,6 @@ https://medium.com/@jujunsetiawan10/how-to-create-progress-bar-in-react-native-f
 https://reactnative.dev/docs/view
 */
 
-/*
-type ItemData = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  progress: number; 
-};
-
-
-const DATA: ItemData[] = [
-  {
-    id: 'item-one',
-    title: 'Tomato',
-    imageUrl: 'https://picsum.photos/seed/696/3000/2000',
-    progress: 0.5, // 50% progress
-  },
-  {
-    id: 'item-two',
-    title: 'Blueberry',
-    imageUrl: 'https://picsum.photos/seed/696/3000/2000',
-    progress: 0.7, // 70% progress
-  },
-  {
-    id: 'item-three',
-    title: 'Celery',
-    imageUrl: 'https://picsum.photos/seed/696/3000/2000',
-    progress: 0.2, // 20% progress
-  },
-];
-
-type ItemProps = {
-  item: ItemData;
-  onPress: () => void;
-  backgroundColor: string;
-  textColor: string;
-  onEdit: (id: string) => void; 
-  onDelete: (id: string) => void; 
-};
-
-const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: ItemProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
-    <View style={styles.row}>
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={[styles.title, { color: textColor }]}>{item.title}</Text>
-        
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${item.progress * 100}%`}]} />
-        </View>
-        <Text style={styles.percentageText}>{Math.round(item.progress * 100)}%</Text>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => onEdit(item.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onDelete(item.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
-*/
-
 type ItemProps = {
   item: PerishableItem;
   onPress: () => void;
@@ -94,6 +30,7 @@ type ItemProps = {
   textColor: string;
   onEdit: (id: string) => void; 
   onDelete: (id: string) => void; 
+  update: number;
 };
 
 type ItemParameters = {
@@ -122,8 +59,8 @@ const image = (category: string) => {
     }
 };
 
-const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: ItemProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
+const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete, update }: ItemProps) => (
+  <Link href={{pathname: './itemDetails', params: {id: item.perishable_id, update: update}}} onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
         <Image source={image(item.category)} style={styles.image} />      
         <View style={styles.textContainer}>
@@ -144,7 +81,7 @@ const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete }: I
         </View>
       </View>
     </View>
-  </TouchableOpacity>
+  </Link>
 );
 
 //item_name?: string
@@ -155,6 +92,8 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   const client = new Operations(ctx);
   const [items, setItems] = useState<PerishableItem[]>([]);
   const [newItem, setNewItem] = useState('');
+
+  const [update, setUpdate] = useState(0);
 
   /*
   const prepareItems = React.useCallback(async () => {
@@ -224,6 +163,11 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
 
   }, [newItem]);
 
+  const handleClick = (id: string) => {
+    setSelectedId(id);
+    setUpdate(update + 1);
+  }
+
   //const renderItem = ({ item }: { item: ItemData }) => {
   const renderItem = ({ item }: { item: PerishableItem }) => {
     const backgroundColor = item.perishable_id === selectedId ? '#F18208' : '#FFFFFF';
@@ -232,11 +176,12 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   return (
     <Item
         item={item}
-        onPress={() => setSelectedId(item.perishable_id)}
+        onPress={() => handleClick(item.perishable_id)}
         backgroundColor={backgroundColor}
         textColor={color}
         onEdit={handleEdit} 
-        onDelete={handleDelete} 
+        onDelete={handleDelete}
+        update={update} 
       />
     );
   };

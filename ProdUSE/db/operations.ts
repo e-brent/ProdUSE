@@ -53,14 +53,15 @@ class Operations {
 
     // get specific item from the perishableItems table by id -- will be used for the item details page
     // Emme
-    async getperishableItem(id: number): Promise<PerishableItem | null> {
+    async getPerishableItem(id: number): Promise<PerishableItem | null> {   
+     
         const rawValue = await this.db.getFirstAsync<
             Omit<PerishableItem, 'date_purchased' | 'expiration_date'> & {
                 date_purchased: string;
                 expiration_date: string;
             }
-        >('SELECT perishable_id, perishable_name, date_purchased as "date_purchased", expiration_date as "expiration_date", days_in_fridge, amount_used, category, image_url FROM perishableItems WHERE id = ?', [id]);
-
+        >('SELECT perishable_id, perishable_name, date_purchased as "date_purchased", expiration_date as "expiration_date", days_in_fridge, amount_used, category, image_url FROM perishableItems WHERE perishable_id = ?', [id]);
+        
         if (!rawValue) {
             return null;
         }
@@ -138,7 +139,7 @@ class Operations {
     // edit amount_used
     // Kyle
     async editAmountUsed(perishable_id: number, amount_used: number): Promise<void> {
-        const item = await this.getperishableItem(perishable_id);
+        const item = await this.getPerishableItem(perishable_id);
 
         await this.db.runAsync(
             'UPDATE perishableItems SET amount_used = ? WHERE perishable_id = ?',
