@@ -320,8 +320,79 @@ class Operations {
         );
     }
 
-    // operations for specific stats???
-    // Emme
+    // metric operations
+    // kyle
+
+    async itemsLogged(): Promise<number> {
+        // Get total count of all items ever logged (both current and past)
+        const result = await this.db.getFirstAsync<{ total: number }>(
+            `SELECT COUNT(*) as total FROM (
+            SELECT perishable_name FROM perishableItems 
+            UNION ALL 
+            SELECT past_name FROM pastItems
+        )`
+        );
+        return result?.total ?? 0;
+    }
+
+    async mostUsedByCategory(): Promise<Array<{ category: string, avgUsage: number }>> {
+        // Calculate average percentage used by category before disposal
+        const results = await this.db.getAllAsync<{ category: string, avgUsage: number }>(
+            `SELECT 
+            category,
+            ROUND(AVG(total_used) * 100, 1) as avgUsage
+        FROM pastItems
+        GROUP BY category
+        ORDER BY avgUsage DESC`
+        );
+        return results ?? [];
+    }
+
+    async leastUsedByCategory(): Promise<Array<{ category: string, avgUsage: number }>> {
+        // Same as mostUsedByCategory but ordered ascending
+        const results = await this.db.getAllAsync<{ category: string, avgUsage: number }>(
+            `SELECT 
+            category,
+            ROUND(AVG(total_used) * 100, 1) as avgUsage
+        FROM pastItems
+        GROUP BY category
+        ORDER BY avgUsage ASC`
+        );
+        return results ?? [];
+    }
+
+    async mostPurchasedItem(): Promise<Array<{ itemName: string, purchaseCount: number }>> {
+        // Count occurrences of each item across both tables
+        const results = await this.db.getAllAsync<{ itemName: string, purchaseCount: number }>(
+            `SELECT itemName, COUNT(*) as purchaseCount
+        FROM (
+            SELECT perishable_name as itemName FROM perishableItems
+            UNION ALL
+            SELECT past_name as itemName FROM pastItems
+        )
+        GROUP BY itemName
+        ORDER BY purchaseCount DESC
+        LIMIT 5`
+        );
+        return results ?? [];
+    }
+
+    async leastPurchasedItem(): Promise<Array<{ itemName: string, purchaseCount: number }>> {
+        // Same as mostPurchasedItem but ordered ascending
+        const results = await this.db.getAllAsync<{ itemName: string, purchaseCount: number }>(
+            `SELECT itemName, COUNT(*) as purchaseCount
+        FROM (
+            SELECT perishable_name as itemName FROM perishableItems
+            UNION ALL
+            SELECT past_name as itemName FROM pastItems
+        )
+        GROUP BY itemName
+        ORDER BY purchaseCount ASC
+        LIMIT 5`
+        );
+        return results ?? [];
+    }
+
 
 
 
