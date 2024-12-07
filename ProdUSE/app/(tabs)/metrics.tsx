@@ -35,7 +35,12 @@ const MyMetrics = () => {
   const ctx = useSQLiteContext();
   const operations = new Operations(ctx);
 
-  const getCategoryIcon = (category: string | undefined): any => {
+  const getCategoryIcon = (category: string | undefined, itemName: string): any => {
+    if (itemName) {
+      if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
+      if (itemName.toLowerCase() === 'apples') return appleIcon;
+    }
+
     if (!category) return otherIcon;
 
     switch (category.toLowerCase()) {
@@ -101,7 +106,7 @@ const MyMetrics = () => {
         <View style={styles.used}>
           <Text style={styles.usage}>Most Used</Text>
           <Image
-            source={getCategoryIcon(mostUsedCategory.category)}
+            source={getCategoryIcon(mostUsedCategory.category,'')}
             style={styles.iconImage}
           />
           <Text style={styles.amount}>
@@ -111,7 +116,7 @@ const MyMetrics = () => {
         <View style={styles.used}>
           <Text style={styles.usage}>Least Used</Text>
           <Image
-            source={getCategoryIcon(leastUsedCategory.category)}
+            source={getCategoryIcon(leastUsedCategory.category,'')}
             style={styles.iconImage}
           />
           <Text style={styles.amount}>
@@ -125,7 +130,7 @@ const MyMetrics = () => {
           <Text style={styles.usage}>Most Purchased</Text>
           <View style={styles.iconContainer}>
             <Image
-              source={getCategoryIcon(undefined)} 
+              source={getCategoryIcon(undefined,mostPurchased.itemName)} 
               style={styles.iconImage}
             />
           </View>
@@ -137,7 +142,7 @@ const MyMetrics = () => {
           <Text style={styles.usage}>Least Purchased</Text>
           <View style={styles.iconContainer}>
             <Image
-              source={getCategoryIcon(undefined)} 
+              source={getCategoryIcon(undefined,leastPurchased.itemName)} 
               style={styles.iconImage}
             />
           </View>
