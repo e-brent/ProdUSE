@@ -12,7 +12,7 @@ import fruitIcon from '../assets/images/fruitIcon-min.png';
 import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
-import otherIcon from '../assets/images/otherIcon-min.png';
+import otherIcon from '../assets/images/otherIcon`-min.png';
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
 
