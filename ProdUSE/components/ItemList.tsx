@@ -12,7 +12,7 @@ import fruitIcon from '../assets/images/fruitIcon-min.png';
 import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
-import otherIcon from '../assets/images/otherIcon`-min.png';
+import otherIcon from '../assets/images/otherIcon-min.png';
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
 
@@ -64,12 +64,9 @@ const Item = ({ item, backgroundColor, textColor, onSeeDetail, onDelete, update 
   <View style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
 
-        <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
-          <Ionicons name="close-circle" size={23} color="red" />
-        </TouchableOpacity>
-
-        <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
+        <Image source={getCategoryIcon(item.category, item.perishable_name)} style={styles.image} />
         <View style={styles.textContainer}>
+
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
 
