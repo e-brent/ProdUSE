@@ -15,6 +15,8 @@ import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
+import broccoliIcon from '../assets/images/broccoliIcon-min.png';
+import bananaIcon from '../assets/images/bananaIcon-min.png';
 
 
 /*sources that I used
@@ -47,6 +49,8 @@ const getCategoryIcon = (category: string | undefined, itemName: string): any =>
   if (itemName) {
     if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
     if (itemName.toLowerCase() === 'apples') return appleIcon;
+    if(itemName.toLowerCase() === 'broccoli') return broccoliIcon;
+    if(itemName.toLowerCase() === 'bananas') return bananaIcon;
   }
 
   if (!category) return otherIcon;
@@ -141,7 +145,7 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
 
   const handleDelete = React.useCallback(async (id: string) => {
     console.log('delete item');
-    client.deletePerishable(id);
+    client.deletePerishable(parseInt(id));
     setItems(await client.getPerishableItems());
 
   }, [newItem]);
