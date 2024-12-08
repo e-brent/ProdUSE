@@ -11,6 +11,8 @@ import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
+import appleIcon from '../assets/images/appleIcon-min.png';
+import stawberryIcon from '../assets/images/strawberryIcon-min.png';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, Link } from 'expo-router';
@@ -48,21 +50,20 @@ const ITEM: ItemData = {
   ],
 };
 
-const image = (category: string) => {
-  if (category == 'fruit'){
-    return fruitIcon;
+const image = (category: string | undefined, itemName: string): any => {
+  if (itemName) {
+    if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
+    if (itemName.toLowerCase() === 'apples') return appleIcon;
   }
-  else if (category == 'vegetable'){
-    return vegetableIcon;
-  }
-  else if (category == 'dairy'){
-    return dairyIcon;
-  }
-  else if (category == 'meat'){
-    return meatIcon;
-  }
-  else {
-    return otherIcon;
+
+  if (!category) return otherIcon;
+
+  switch (category.toLowerCase()) {
+    case 'fruit': return fruitIcon;
+    case 'vegetable': return vegetableIcon;
+    case 'dairy': return dairyIcon;
+    case 'meat/fish': return meatIcon;
+    default: return otherIcon;
   }
 };
 
@@ -139,10 +140,17 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
       </TouchableOpacity>
 
       <View style={styles.item}>
+<<<<<<< Updated upstream
         <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
         <Text style={styles.title}>{item.perishable_name}</Text>
         <Text style={styles.paragraphtitle}>Purchase Date: {ITEM.purchasedate}</Text>
         <Text style={styles.paragraphtitle}>Days in Fridge: {daysInFridge}</Text>
+=======
+        <Image source={image(item.category,item.perishable_name)} style={styles.image} />
+        <Text style={styles.title}>{item.perishable_name}</Text>
+        <Text style={styles.paragraphtitle}>Purchase Date: {item.date_purchased.toDateString()}</Text>
+        <Text style={styles.paragraphtitle}>Days in Fridge: {item.days_in_fridge}</Text>
+>>>>>>> Stashed changes
 
         {/* Progress Bar */}
         <View>

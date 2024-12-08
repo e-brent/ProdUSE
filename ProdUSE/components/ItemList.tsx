@@ -12,7 +12,12 @@ import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
+<<<<<<< Updated upstream
 import Ionicons from '@expo/vector-icons/Ionicons';
+=======
+import appleIcon from '../assets/images/appleIcon-min.png';
+import stawberryIcon from '../assets/images/strawberryIcon-min.png';
+>>>>>>> Stashed changes
 
 
 /*sources that I used
@@ -42,31 +47,34 @@ type ItemParameters = {
   filterOrder: string
 }
 
-const image = (category: string) => {
-    if (category == 'fruit'){
-      return fruitIcon;
-    }
-    else if (category == 'vegetable'){
-      return vegetableIcon;
-    }
-    else if (category == 'dairy'){
-      return dairyIcon;
-    }
-    else if (category == 'meat'){
-      return meatIcon;
-    }
-    else {
-      return otherIcon;
-    }
+const getCategoryIcon = (category: string | undefined, itemName: string): any => {
+  if (itemName) {
+    if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
+    if (itemName.toLowerCase() === 'apples') return appleIcon;
+  }
+
+  if (!category) return otherIcon;
+
+  switch (category.toLowerCase()) {
+    case 'fruit': return fruitIcon;
+    case 'vegetable': return vegetableIcon;
+    case 'dairy': return dairyIcon;
+    case 'meat/fish': return meatIcon;
+    default: return otherIcon;
+  }
 };
 
 const Item = ({ item, onPress, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
   <Link href={{pathname: './itemDetails', params: {id: item.perishable_id, update: update}}} onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
+<<<<<<< Updated upstream
         <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
           <Ionicons name="close-circle" size={23} color="red" />
         </TouchableOpacity>
         <Image source={image(item.category)} style={styles.image} />      
+=======
+        <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
+>>>>>>> Stashed changes
         <View style={styles.textContainer}>
         <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
         

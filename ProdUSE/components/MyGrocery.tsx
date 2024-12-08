@@ -34,7 +34,7 @@ const AddGroceryItems = () => {
 
   const onSubmit = async () => {
     try {
-      await client.addPerishableItem(perishable_name, date_purchased, parseFloat(amount_used) || 0, category); // Include category
+      await client.addPerishableItem(perishable_name, date_purchased, parseFloat(amount_used) || 0, 'fruit'); // Include category
       const items = await client.getPerishableItems();
       console.log('Current items in database:', items);
       alert("Item added!");
