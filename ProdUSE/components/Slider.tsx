@@ -3,18 +3,36 @@ import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useRouter, Link } from 'expo-router';
 
-const SliderWithPercentage = () => {
-  const [sliderValue, setSliderValue] = useState(0);
+import { useSQLiteContext } from '../db/SQLiteProvider';
+import Operations from '../db/operations';
+import { PerishableItem, PastItem, Recipe } from '../db/types';
+
+type AmountParams = {
+  item_id: string;
+  item_name: string;
+  item_amount: string;
+}
+
+const SliderWithPercentage = ({item_id, item_name, item_amount} : AmountParams) => {
+  let init_slider = parseFloat(item_amount);
+  const [sliderValue, setSliderValue] = useState(init_slider);
+
+  const router = useRouter();
+  const ctx = useSQLiteContext();
+  const client = new Operations(ctx);
 
   const handleSubmit = () => {
+    client.editAmountUsed(parseInt(item_id), sliderValue);
     alert(`Submitted value: ${Math.round(sliderValue * 100)}%`);
+    router.back();
   };
-  const router = useRouter();
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
+
+      <Text style = {styles.title}>Drag the slider to edit the amount of {item_name} that you have used: </Text>
       {/* Slider */}
       <Slider
         style={styles.slider}
@@ -43,6 +61,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    //fontWeight: 'bold',
+    color: '#333',
+    marginTop: 40,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   slider: {
     width: 200,
