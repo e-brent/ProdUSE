@@ -141,17 +141,10 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
       </TouchableOpacity>
 
       <View style={styles.item}>
-<<<<<<< Updated upstream
         <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
         <Text style={styles.title}>{item.perishable_name}</Text>
         <Text style={styles.paragraphtitle}>Purchase Date: {ITEM.purchasedate}</Text>
         <Text style={styles.paragraphtitle}>Days in Fridge: {daysInFridge}</Text>
-=======
-        <Image source={image(item.category,item.perishable_name)} style={styles.image} />
-        <Text style={styles.title}>{item.perishable_name}</Text>
-        <Text style={styles.paragraphtitle}>Purchase Date: {item.date_purchased.toDateString()}</Text>
-        <Text style={styles.paragraphtitle}>Days in Fridge: {item.days_in_fridge}</Text>
->>>>>>> Stashed changes
 
         {/* Progress Bar */}
         <View>
