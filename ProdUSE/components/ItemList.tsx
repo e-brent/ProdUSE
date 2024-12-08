@@ -6,13 +6,13 @@ import { Link } from 'expo-router';
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
 import { PerishableItem, PastItem, Recipe } from '../db/types';
+import { Ionicons } from '@expo/vector-icons';
 
 import fruitIcon from '../assets/images/fruitIcon-min.png';
 import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
 
@@ -63,8 +63,10 @@ const getCategoryIcon = (category: string | undefined, itemName: string): any =>
 const Item = ({ item, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
   <View style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
-      <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
-            <View style={styles.textContainer}>
+
+        <Image source={getCategoryIcon(item.category, item.perishable_name)} style={styles.image} />
+        <View style={styles.textContainer}>
+
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
 

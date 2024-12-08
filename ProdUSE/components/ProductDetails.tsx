@@ -141,7 +141,7 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
       </TouchableOpacity>
 
       <View style={styles.item}>
-        <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
+        <Image source={image(item.category,item.perishable_name)} style={styles.image} />
         <Text style={styles.title}>{item.perishable_name}</Text>
         <Text style={styles.paragraphtitle}>Purchase Date: {item.date_purchased.toDateString()}</Text>
         <Text style={styles.paragraphtitle}>Days in Fridge: {calculateDaysInFridge(item.date_purchased.toDateString())}</Text>
