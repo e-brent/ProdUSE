@@ -430,8 +430,13 @@ class Operations {
         return results ?? [];
     }
 
-
-
+    async getLoggedCategories(): Promise<Array<{ category: string }>> {
+        const rawCategories = await this.db.getAllAsync<{ category: string }>(
+            `SELECT category FROM perishableItems`
+        );
+        const categories = rawCategories.map((row) => ({ category: row.category }));
+        return categories ?? [];
+    }
 
 }
 

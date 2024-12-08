@@ -31,16 +31,12 @@ const MyMetrics = () => {
   const [leastUsedCategory, setLeastUsedCategory] = useState<CategoryMetric>({ category: '', avgUsage: 0 });
   const [mostPurchased, setMostPurchased] = useState<ItemMetric>({ itemName: '', purchaseCount: 0 });
   const [leastPurchased, setLeastPurchased] = useState<ItemMetric>({ itemName: '', purchaseCount: 0 });
+  const [allCategoriesLogged, setAllCategoriesLogged] = useState(false);
 
   const ctx = useSQLiteContext();
   const operations = new Operations(ctx);
 
-  const getCategoryIcon = (category: string | undefined, itemName: string): any => {
-    if (itemName) {
-      if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
-      if (itemName.toLowerCase() === 'apples') return appleIcon;
-    }
-
+  const getCategoryIcon = (category: string | undefined): any => {
     if (!category) return otherIcon;
 
     switch (category.toLowerCase()) {
@@ -79,6 +75,13 @@ const MyMetrics = () => {
         if (leastPurchasedItems.length > 0) {
           setLeastPurchased(leastPurchasedItems[0]);
         }
+
+        const loggedCategories = await operations.getLoggedCategories();
+        const loggedCategoryNames = loggedCategories.map((cat) => cat.category);
+        const expectedCategories = ['fruit', 'vegetable', 'dairy', 'meat/fish'];
+        const allCategoriesLogged = expectedCategories.every((category) => loggedCategoryNames.includes(category));
+        setAllCategoriesLogged(allCategoriesLogged);
+
       } catch (error) {
         console.error('Error loading metrics:', error);
       }
@@ -106,7 +109,7 @@ const MyMetrics = () => {
         <View style={styles.used}>
           <Text style={styles.usage}>Most Used</Text>
           <Image
-            source={getCategoryIcon(mostUsedCategory.category,'')}
+            source={getCategoryIcon(mostUsedCategory.category)}
             style={styles.iconImage}
           />
           <Text style={styles.amount}>
@@ -116,7 +119,7 @@ const MyMetrics = () => {
         <View style={styles.used}>
           <Text style={styles.usage}>Least Used</Text>
           <Image
-            source={getCategoryIcon(leastUsedCategory.category,'')}
+            source={getCategoryIcon(leastUsedCategory.category)}
             style={styles.iconImage}
           />
           <Text style={styles.amount}>
@@ -130,7 +133,7 @@ const MyMetrics = () => {
           <Text style={styles.usage}>Most Purchased</Text>
           <View style={styles.iconContainer}>
             <Image
-              source={getCategoryIcon(undefined,mostPurchased.itemName)} 
+              source={getCategoryIcon(undefined)} 
               style={styles.iconImage}
             />
           </View>
@@ -142,7 +145,7 @@ const MyMetrics = () => {
           <Text style={styles.usage}>Least Purchased</Text>
           <View style={styles.iconContainer}>
             <Image
-              source={getCategoryIcon(undefined,leastPurchased.itemName)} 
+              source={getCategoryIcon(undefined)} 
               style={styles.iconImage}
             />
           </View>
@@ -156,6 +159,13 @@ const MyMetrics = () => {
         <Image source={badge} style={styles.badgeImage} />
         <Text style={styles.badgeText}>First Item Logged</Text>
       </View>
+      
+      {allCategoriesLogged && (
+        <View style={styles.badgeContainer}>
+          <Image source={badge} style={styles.badgeImage} />
+          <Text style={styles.badgeText}>All Categories Logged</Text>
+        </View>
+      )}
     </View>
   );
 };
