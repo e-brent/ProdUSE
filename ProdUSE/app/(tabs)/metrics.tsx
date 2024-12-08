@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View, Text, ScrollView} from 'react-native';
 import { useSQLiteContext } from '../../db/SQLiteProvider';
 import Operations from '../../db/operations';
 
@@ -11,7 +11,7 @@ import otherIcon from '../../assets/images/otherIcon-min.png';
 import badge from '../../assets/images/badgeicon-min.png';
 import appleIcon from '../../assets/images/appleIcon-min.png';
 import stawberryIcon from '../../assets/images/strawberryIcon-min.png';
-
+import { useFocusEffect } from 'expo-router';
 
 // Define types for our metric data
 type CategoryMetric = {
@@ -49,49 +49,55 @@ const MyMetrics = () => {
   };
 
 
-  useEffect(() => {
-    const loadMetrics = async () => {
-      try {
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('rendering');
 
-        const total = await operations.itemsLogged();
-        setTotalItems(total);
+      const loadMetrics = async () => {
+        try {
 
-        const mostUsed = await operations.mostUsedByCategory();
-        if (mostUsed.length > 0) {
-          setMostUsedCategory(mostUsed[0]);
+          const total = await operations.itemsLogged();
+          setTotalItems(total);
+
+          const mostUsed = await operations.mostUsedByCategory();
+          if (mostUsed.length > 0) {
+            setMostUsedCategory(mostUsed[0]);
+          }
+
+          const leastUsed = await operations.leastUsedByCategory();
+          if (leastUsed.length > 0) {
+            setLeastUsedCategory(leastUsed[0]);
+          }
+
+          const mostPurchasedItems = await operations.mostPurchasedItem();
+          if (mostPurchasedItems.length > 0) {
+            setMostPurchased(mostPurchasedItems[0]);
+          }
+
+          const leastPurchasedItems = await operations.leastPurchasedItem();
+          if (leastPurchasedItems.length > 0) {
+            setLeastPurchased(leastPurchasedItems[0]);
+          }
+
+          const loggedCategories = await operations.getLoggedCategories();
+          const loggedCategoryNames = loggedCategories.map((cat) => cat.category);
+          const expectedCategories = ['fruit', 'vegetable', 'dairy', 'meat/fish'];
+          const categoriesLogged = expectedCategories.every((category) => loggedCategoryNames.includes(category));
+          setAllCategoriesLogged(categoriesLogged);
+
+        } catch (error) {
+          console.error('Error loading metrics:', error);
         }
+      };
 
-        const leastUsed = await operations.leastUsedByCategory();
-        if (leastUsed.length > 0) {
-          setLeastUsedCategory(leastUsed[0]);
-        }
-
-        const mostPurchasedItems = await operations.mostPurchasedItem();
-        if (mostPurchasedItems.length > 0) {
-          setMostPurchased(mostPurchasedItems[0]);
-        }
-
-        const leastPurchasedItems = await operations.leastPurchasedItem();
-        if (leastPurchasedItems.length > 0) {
-          setLeastPurchased(leastPurchasedItems[0]);
-        }
-
-        const loggedCategories = await operations.getLoggedCategories();
-        const loggedCategoryNames = loggedCategories.map((cat) => cat.category);
-        const expectedCategories = ['fruit', 'vegetable', 'dairy', 'meat/fish'];
-        const allCategoriesLogged = expectedCategories.every((category) => loggedCategoryNames.includes(category));
-        setAllCategoriesLogged(allCategoriesLogged);
-
-      } catch (error) {
-        console.error('Error loading metrics:', error);
-      }
-    };
-
-    loadMetrics();
-  }, []);
+      loadMetrics();
+  }, [])
+  );
+  
+    
 
   return (
-    <View style={styles.background}>
+    <ScrollView style={styles.background}>
       <View style={styles.headerContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Usage</Text>
@@ -155,18 +161,17 @@ const MyMetrics = () => {
         </View>
       </View>
 
+      <Text style={styles.badgeTitle}>Achievement Badges</Text>
       <View style={styles.badgeContainer}>
         <Image source={badge} style={styles.badgeImage} />
         <Text style={styles.badgeText}>First Item Logged</Text>
       </View>
       
-      {allCategoriesLogged && (
-        <View style={styles.badgeContainer}>
-          <Image source={badge} style={styles.badgeImage} />
-          <Text style={styles.badgeText}>All Categories Logged</Text>
-        </View>
-      )}
-    </View>
+      {allCategoriesLogged && (<View style={styles.badgeContainer}>
+        <Image source={badge} style={styles.badgeImage} />
+        <Text style={styles.badgeText}>All Categories Logged</Text>
+      </View>)}
+    </ScrollView>
   );
 };
 
@@ -251,8 +256,16 @@ iconImage: {
   height: 70,
   backgroundColor: 'transparent'
 },
+badgeTitle: {
+  color: '#ffffff',
+  marginTop: 20,
+  marginBottom: 5,
+  fontSize: 20,
+  fontWeight: 'bold',
+  alignSelf: 'center'
+},
 badgeContainer:{
-  // flexDirection: 'row',
+  //flexDirection: 'row',
   padding: 15,
   alignItems: 'center'
 },

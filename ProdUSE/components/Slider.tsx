@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useRouter, Link } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useSQLiteContext } from '../db/SQLiteProvider';
 import Operations from '../db/operations';
@@ -20,12 +21,43 @@ const SliderWithPercentage = ({item_id, item_name, item_amount} : AmountParams) 
   const router = useRouter();
   const ctx = useSQLiteContext();
   const client = new Operations(ctx);
+  const [item, setItem] = useState<PerishableItem | null>();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const getItem = async() => {
+        console.log('getting item details');
+        let id = parseInt(item_id);
+        setItem(await client.getPerishableItem(id));
+      }
+
+      getItem();
+
+      return () => {
+        isActive = false;
+      };
+
+    }, [setItem])
+  );
 
   const handleSubmit  = async () => {
-    await client.editAmountUsed(parseInt(item_id), sliderValue);
-    alert(`Submitted value: ${Math.round(sliderValue * 100)}%`);
-    router.back();
+    if (sliderValue < 1){
+      await client.editAmountUsed(parseInt(item_id), sliderValue);
+      alert(`Submitted value: ${Math.round(sliderValue * 100)}%`);
+      router.back();
+    }
+    else {
+      if(item){
+        await client.addPastItem(item.perishable_name, item.date_purchased, new Date(), item.days_in_fridge, true, 1, item.category);
+      }
+      await client.deletePerishable(parseInt(item_id));
+      alert(`You finished your ${item_name}! Congrats!`);
+      router.back();
+    }
   };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>

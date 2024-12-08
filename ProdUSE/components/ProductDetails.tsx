@@ -13,6 +13,8 @@ import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
+import broccoliIcon from '../assets/images/broccoliIcon-min.png';
+import bananaIcon from '../assets/images/bananaIcon-min.png';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, Link } from 'expo-router';
@@ -54,6 +56,8 @@ const image = (category: string | undefined, itemName: string): any => {
   if (itemName) {
     if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
     if (itemName.toLowerCase() === 'apples') return appleIcon;
+    if(itemName.toLowerCase() === 'broccoli') return broccoliIcon;
+    if(itemName.toLowerCase() === 'bananas') return bananaIcon;
   }
 
   if (!category) return otherIcon;
@@ -94,8 +98,12 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
     console.log('Edit button clicked');
   };
 
-  const handleThrowOut = (id: string) => {
+  const handleThrowOut = async (id: string) => {
     console.log(`Item ${id} marked as throw out.`);
+    if (item){
+      await client.addPastItem(item.perishable_name, item.date_purchased, new Date(), item.days_in_fridge, false, item.amount_used, item.category);
+    }
+    await client.deletePerishable(parseInt(id));
   };
 
   const handleRecipe = (id: string) => {

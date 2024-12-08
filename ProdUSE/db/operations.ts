@@ -117,14 +117,17 @@ class Operations {
         // convert date purchased to string
         let date = date_purchased.toString();
 
+        // make name lowercase for ease of comparison later
+        let name = perishable_name.toLowerCase();
+
         console.log(id);
-        console.log(perishable_name);
+        console.log(name);
         console.log(date);
         console.log(amount_used);
         console.log('category:' + category);
         console.log(image);
 
-        let query = `INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (${id}, "${perishable_name}", "${date}", " ", 0, ${amount_used}, "${category}", "${image}")`;
+        let query = `INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (${id}, "${name}", "${date}", " ", 0, ${amount_used}, "${category}", "${image}")`;
 
         /*await this.db.runAsync(
             `INSERT INTO perishableItems (perishable_id, perishable_name, date_purchased, expiration_date, days_in_fridge, amount_used, category, image_url) VALUES (?, '?', '?', ' ', 0, ?, '?', '?')`,
@@ -274,7 +277,7 @@ class Operations {
 
     // delete item from perishableItems
     // Emme
-    async deletePerishable(id: string): Promise<void> {
+    async deletePerishable(id: number): Promise<void> {
         await this.db.runAsync(
             'DELETE FROM perishableItems WHERE perishable_id = ?',
             [id]
@@ -432,9 +435,14 @@ class Operations {
 
     async getLoggedCategories(): Promise<Array<{ category: string }>> {
         const rawCategories = await this.db.getAllAsync<{ category: string }>(
-            `SELECT category FROM perishableItems`
+            `SELECT DISTINCT category FROM perishableItems
+            UNION
+            SELECT DISTINCT category FROM pastItems`
         );
         const categories = rawCategories.map((row) => ({ category: row.category }));
+
+        console.log(categories);
+
         return categories ?? [];
     }
 
