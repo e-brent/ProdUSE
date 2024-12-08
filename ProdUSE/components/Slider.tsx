@@ -92,13 +92,13 @@ const styles = StyleSheet.create({
     color: '#000', 
   },
   backButton: {
-    marginTop: 20,
-    marginLeft: 15,
-    padding: 10,
+    position: 'absolute',
+    top: 10,
+    left: 20,
     backgroundColor: '#ddd',
+    padding: 10,
+    marginBottom: 30,
     borderRadius: 5,
-    width: 80,
- 
   },
   backButtonText: {
     color: '#000',

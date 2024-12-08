@@ -131,14 +131,14 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
 
     return (
       <SafeAreaView style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Text style={styles.backButtonText}>{'< Back'}</Text>
+       </TouchableOpacity>
       {/* Edit Icon */}
       <Link href={{pathname: './editItem', params: {id: item.perishable_id, name: item.perishable_name, amount : item.amount_used, date : item.date_purchased.toString(), category : item.category, update: updater}}} style={styles.editIcon} onPress={handleEdit}>
         <Icon name="edit" size={30} color="black" />
       </Link>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
 
       <View style={styles.item}>
         <Image source={image(item.category,item.perishable_name)} style={styles.image} />
@@ -210,8 +210,8 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 20,
+    right: 20,
     zIndex: 1,
   },
   item: {
@@ -297,13 +297,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   backButton: {
-    marginTop: 20,
-    marginLeft: 15,
-    padding: 10,
+    position: 'absolute',
+    top: 20,
+    left: 20,
     backgroundColor: '#ddd',
+    padding: 10,
     borderRadius: 5,
-    width: 80,
- 
   },
   backButtonText: {
     color: '#000',
