@@ -104,11 +104,11 @@ export default function Index() {
             >Dairy</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setCategory('meat')}>
+          <TouchableOpacity onPress={() => setCategory('meat/fish')}>
             <Text
               style={[
                 styles.filterOption,
-                category === 'meat' ? styles.selectedOption : null,
+                category === 'meat/fish' ? styles.selectedOption : null,
               ]}
             >Meat</Text>
           </TouchableOpacity>

@@ -21,8 +21,8 @@ const SliderWithPercentage = ({item_id, item_name, item_amount} : AmountParams) 
   const ctx = useSQLiteContext();
   const client = new Operations(ctx);
 
-  const handleSubmit = () => {
-    client.editAmountUsed(parseInt(item_id), sliderValue);
+  const handleSubmit  = async () => {
+    await client.editAmountUsed(parseInt(item_id), sliderValue);
     alert(`Submitted value: ${Math.round(sliderValue * 100)}%`);
     router.back();
   };

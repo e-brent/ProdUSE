@@ -87,7 +87,7 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
     return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 1 day = 86400000 ms
   };
 
-  const daysInFridge = calculateDaysInFridge(ITEM.purchasedate);
+  //const daysInFridge = ;
 
   const handleEdit = () => {
     setUpdater(updater + 1);
@@ -143,16 +143,16 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
       <View style={styles.item}>
         <Image source={{ uri: ITEM.imageUrl }} style={styles.image} />
         <Text style={styles.title}>{item.perishable_name}</Text>
-        <Text style={styles.paragraphtitle}>Purchase Date: {ITEM.purchasedate}</Text>
-        <Text style={styles.paragraphtitle}>Days in Fridge: {daysInFridge}</Text>
+        <Text style={styles.paragraphtitle}>Purchase Date: {item.date_purchased.toDateString()}</Text>
+        <Text style={styles.paragraphtitle}>Days in Fridge: {calculateDaysInFridge(item.date_purchased.toDateString())}</Text>
 
         {/* Progress Bar */}
         <View>
           <View style={styles.progressContainer}>
-            <View style={[styles.progressBar, { width: `${ITEM.progress * 100}%` }]} />
+            <View style={[styles.progressBar, { width: `${item.amount_used * 100}%` }]} />
           </View>
           <Text style={[styles.percentageText, { textAlign: 'right' }]}>
-            {Math.round(ITEM.progress * 100)}% used
+            {Math.round(item.amount_used * 100)}% used
           </Text>
         </View>
 
