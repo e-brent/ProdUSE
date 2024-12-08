@@ -12,12 +12,9 @@ import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
-<<<<<<< Updated upstream
 import Ionicons from '@expo/vector-icons/Ionicons';
-=======
 import appleIcon from '../assets/images/appleIcon-min.png';
 import stawberryIcon from '../assets/images/strawberryIcon-min.png';
->>>>>>> Stashed changes
 
 
 /*sources that I used
@@ -46,7 +43,6 @@ type ItemParameters = {
   filterOrder: string
 }
 
-<<<<<<< HEAD
 const getCategoryIcon = (category: string | undefined, itemName: string): any => {
   if (itemName) {
     if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
@@ -62,41 +58,13 @@ const getCategoryIcon = (category: string | undefined, itemName: string): any =>
     case 'meat/fish': return meatIcon;
     default: return otherIcon;
   }
-=======
-const image = (category: string) => {
-    if (category == 'fruit'){
-      return fruitIcon;
-    }
-    else if (category == 'vegetable'){
-      return vegetableIcon;
-    }
-    else if (category == 'dairy'){
-      return dairyIcon;
-    }
-    else if (category == 'meat/fish'){
-      return meatIcon;
-    }
-    else {
-      return otherIcon;
-    }
->>>>>>> f5c347f0f7b38cb4392e1dddb4053a3d49f46064
 };
 
 const Item = ({ item, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
   <View style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-        <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
-          <Ionicons name="close-circle" size={23} color="red" />
-        </TouchableOpacity>
-=======
->>>>>>> f5c347f0f7b38cb4392e1dddb4053a3d49f46064
-        <Image source={image(item.category)} style={styles.image} />      
-=======
-        <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
->>>>>>> Stashed changes
-        <View style={styles.textContainer}>
+      <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
+            <View style={styles.textContainer}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
 
