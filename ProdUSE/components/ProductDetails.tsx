@@ -103,7 +103,8 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
   };
 
   const handleUsed = (id: string) => {
-    console.log(`Item ${id} marked as used.`);
+    setUpdater(updater + 1);
+    console.log(`More of ${id} has been used.`);
   };
 
   useFocusEffect(
@@ -185,9 +186,11 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
           <TouchableOpacity onPress={() => handleRecipe(ITEM.id)} style={styles.button}>
             <Text style={styles.buttonText}>Recipe</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleUsed(ITEM.id)} style={styles.button}>
-            <Text style={styles.buttonText}>Used</Text>
-          </TouchableOpacity>
+          <View style={styles.button}>
+            <Link href={{pathname: './editAmount', params: {id: item.perishable_id, name: item.perishable_name, amount: item.amount_used, update: updater}}} onPress={() => handleUsed(ITEM.id)} >
+              <Text style={styles.buttonText}>Use Item</Text>
+            </Link>
+          </View>
         </View>
       </View>
     </SafeAreaView>

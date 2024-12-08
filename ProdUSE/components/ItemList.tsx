@@ -31,7 +31,6 @@ https://reactnative.dev/docs/view
 
 type ItemProps = {
   item: PerishableItem;
-  onPress: () => void;
   backgroundColor: string;
   textColor: string;
   onSeeDetail: (id: string) => void; 
@@ -47,6 +46,7 @@ type ItemParameters = {
   filterOrder: string
 }
 
+<<<<<<< HEAD
 const getCategoryIcon = (category: string | undefined, itemName: string): any => {
   if (itemName) {
     if (itemName.toLowerCase() === 'strawberries') return stawberryIcon;
@@ -62,35 +62,64 @@ const getCategoryIcon = (category: string | undefined, itemName: string): any =>
     case 'meat/fish': return meatIcon;
     default: return otherIcon;
   }
+=======
+const image = (category: string) => {
+    if (category == 'fruit'){
+      return fruitIcon;
+    }
+    else if (category == 'vegetable'){
+      return vegetableIcon;
+    }
+    else if (category == 'dairy'){
+      return dairyIcon;
+    }
+    else if (category == 'meat/fish'){
+      return meatIcon;
+    }
+    else {
+      return otherIcon;
+    }
+>>>>>>> f5c347f0f7b38cb4392e1dddb4053a3d49f46064
 };
 
-const Item = ({ item, onPress, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
-  <Link href={{pathname: './itemDetails', params: {id: item.perishable_id, update: update}}} onPress={onPress} style={[styles.item, { backgroundColor }]}>
+const Item = ({ item, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
+  <View style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
           <Ionicons name="close-circle" size={23} color="red" />
         </TouchableOpacity>
+=======
+>>>>>>> f5c347f0f7b38cb4392e1dddb4053a3d49f46064
         <Image source={image(item.category)} style={styles.image} />      
 =======
         <Image source={getCategoryIcon(item.category,item.perishable_name)} style={styles.image} />      
 >>>>>>> Stashed changes
         <View style={styles.textContainer}>
-        <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
-        
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${item.amount_used * 100}%`}]} />
-        </View>
-        <Text style={styles.percentageText}>{Math.round(item.amount_used * 100)}% used</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => onSeeDetail(item.perishable_id)} style={styles.button}>
-            <Text style={styles.buttonText}>See Details</Text>
-          </TouchableOpacity>
-        </View>
+            <View style={styles.deleteContainer}>
+              <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
+                <Ionicons name="close-circle" size={23} color="red" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          
+          <View style={styles.progressContainer}>
+            <View style={[styles.progressBar, { width: `${item.amount_used * 100}%`}]} />
+          </View>
+          <Text style={styles.percentageText}>{Math.round(item.amount_used * 100)}% used</Text>
+
+          <View style={styles.buttonContainer}>
+            <Link href={{pathname: './itemDetails', params: {id: item.perishable_id, update: update}}} onPress={() => onSeeDetail(item.perishable_id)} style={styles.button}>
+              <Text style={styles.buttonText}>See Details</Text>
+            </Link>
+          </View>
       </View>
     </View>
-  </Link>
+  </View>
 );
 
 //item_name?: string
@@ -103,32 +132,6 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   const [newItem, setNewItem] = useState('');
 
   const [update, setUpdate] = useState(0);
-
-  /*
-  const prepareItems = React.useCallback(async () => {
-
-    if (newItem.length === 0) {
-      console.log('prepare items');
-
-      if (search && item_name?.localeCompare("") != 0){
-        console.log('searching');
-        setItems(await client.searchPerishableItems(item_name));
-      }
-      else if (filter){
-        console.log('filtering');
-        setItems(await client.filterPerishable(filterCategory, filterOrder));
-      }
-      else {
-        console.log('get all items');
-        setItems(await client.getPerishableItems());
-      }
-    }
-  }, [newItem]);
-
-  React.useEffect(() => {
-    void prepareItems();
-  }, [prepareItems]);
-  */
 
   useFocusEffect(
     React.useCallback(() => {
@@ -167,6 +170,7 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   };
 
   const handleDelete = React.useCallback(async (id: string) => {
+    console.log('delete item');
     client.deletePerishable(id);
     setItems(await client.getPerishableItems());
 
@@ -179,16 +183,16 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
 
   //const renderItem = ({ item }: { item: ItemData }) => {
   const renderItem = ({ item }: { item: PerishableItem }) => {
-    const backgroundColor = item.perishable_id === selectedId ? '#F18208' : '#FFFFFF';
-    const color = item.perishable_id === selectedId ? 'white' : 'black';
+    const backgroundColor = item.perishable_id === selectedId ? '#FFFFFF' : '#FFFFFF';
+    const color = item.perishable_id === selectedId ? 'black' : 'black';
 
   return (
     <Item
         item={item}
-        onPress={() => handleClick(item.perishable_id)}
+        //onPress={() => handleClick(item.perishable_id)}
         backgroundColor={backgroundColor}
         textColor={color}
-        onSeeDetail={handleSeeDetails} 
+        onSeeDetail={() => handleClick(item.perishable_id)} 
         onDelete={handleDelete}
         update={update} 
       />
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   textContainer: {
     flex: 1, 
@@ -271,7 +275,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+    height: 23,
+    width: 23,
   },
+  deleteContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    height: 23,
+    width: 23,
+    top: 0,
+    right: 0,
+    alignSelf: 'flex-start',
+  }
 });
 
 export default ItemList;

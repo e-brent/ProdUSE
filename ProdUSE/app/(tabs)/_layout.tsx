@@ -84,6 +84,12 @@ export default function TabLayout() {
               }}
             />
             <Tabs.Screen
+              name="editAmount" 
+              options={{
+                href:null,
+              }}
+            />
+            <Tabs.Screen
               name="metrics" 
               options={{
                 title: 'metrics',
