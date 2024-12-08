@@ -12,6 +12,7 @@ import vegetableIcon from '../assets/images/vegetableIcon-min.png';
 import dairyIcon from '../assets/images/dairyIcon-min.png';
 import meatIcon from '../assets/images/meatIcon-min.png';
 import otherIcon from '../assets/images/otherIcon-min.png';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 /*sources that I used
@@ -28,7 +29,7 @@ type ItemProps = {
   onPress: () => void;
   backgroundColor: string;
   textColor: string;
-  onEdit: (id: string) => void; 
+  onSeeDetail: (id: string) => void; 
   onDelete: (id: string) => void; 
   update: number;
 };
@@ -59,9 +60,12 @@ const image = (category: string) => {
     }
 };
 
-const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete, update }: ItemProps) => (
+const Item = ({ item, onPress, backgroundColor, textColor, onSeeDetail, onDelete, update }: ItemProps) => (
   <Link href={{pathname: './itemDetails', params: {id: item.perishable_id, update: update}}} onPress={onPress} style={[styles.item, { backgroundColor }]}>
     <View style={styles.row}>
+        <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.deleteButton}>
+          <Ionicons name="close-circle" size={23} color="red" />
+        </TouchableOpacity>
         <Image source={image(item.category)} style={styles.image} />      
         <View style={styles.textContainer}>
         <Text style={[styles.title, { color: textColor }]}>{item.perishable_name}</Text>
@@ -69,14 +73,11 @@ const Item = ({ item, onPress, backgroundColor, textColor, onEdit, onDelete, upd
         <View style={styles.progressContainer}>
           <View style={[styles.progressBar, { width: `${item.amount_used * 100}%`}]} />
         </View>
-        <Text style={styles.percentageText}>{Math.round(item.amount_used * 100)}%</Text>
+        <Text style={styles.percentageText}>{Math.round(item.amount_used * 100)}% used</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => onEdit(item.perishable_id)} style={styles.button}>
-            <Text style={styles.buttonText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onDelete(item.perishable_id)} style={styles.button}>
-            <Text style={styles.buttonText}>Delete</Text>
+          <TouchableOpacity onPress={() => onSeeDetail(item.perishable_id)} style={styles.button}>
+            <Text style={styles.buttonText}>See Details</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -154,7 +155,7 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
   );
 
 
-  const handleEdit = (id: string) => {
+  const handleSeeDetails = (id: string) => {
   };
 
   const handleDelete = React.useCallback(async (id: string) => {
@@ -179,7 +180,7 @@ const ItemList = ({search, item_name, filter, filterCategory, filterOrder} : Ite
         onPress={() => handleClick(item.perishable_id)}
         backgroundColor={backgroundColor}
         textColor={color}
-        onEdit={handleEdit} 
+        onSeeDetail={handleSeeDetails} 
         onDelete={handleDelete}
         update={update} 
       />
@@ -223,8 +224,8 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 75,
+    height: 75,
   },
   progressContainer: {
     height: 20, 
@@ -257,6 +258,11 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
 });
 
