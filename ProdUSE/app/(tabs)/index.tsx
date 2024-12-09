@@ -38,7 +38,9 @@ export default function Index() {
     setCategory("");
     setSort("");
     setFilter(false);
-    setShowFilter(false);
+    setUpdate(update + 1);
+
+    //setShowFilter(false);
   }
 
   const toggleFilter = () => {
