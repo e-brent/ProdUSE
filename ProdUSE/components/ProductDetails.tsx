@@ -104,6 +104,7 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
       await client.addPastItem(item.perishable_name, item.date_purchased, new Date(), item.days_in_fridge, false, item.amount_used, item.category);
     }
     await client.deletePerishable(parseInt(id));
+    router.back();
   };
 
   const handleRecipe = (id: string) => {
@@ -181,14 +182,14 @@ const ProductDetail = ({item_id, update} : DetailParams) => {
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => handleThrowOut(ITEM.id)} style={styles.button}>
+          <TouchableOpacity onPress={() => handleThrowOut(item.perishable_id)} style={styles.button}>
             <Text style={styles.buttonText}>Throw Out</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleRecipe(ITEM.id)} style={styles.button}>
+          <TouchableOpacity onPress={() => handleRecipe(item.perishable_id)} style={styles.button}>
             <Text style={styles.buttonText}>Recipe</Text>
           </TouchableOpacity>
           <View style={styles.button}>
-            <Link href={{pathname: './editAmount', params: {id: item.perishable_id, name: item.perishable_name, amount: item.amount_used, update: updater}}} onPress={() => handleUsed(ITEM.id)} >
+            <Link href={{pathname: './editAmount', params: {id: item.perishable_id, name: item.perishable_name, amount: item.amount_used, update: updater}}} onPress={() => handleUsed(item.perishable_id)} >
               <Text style={styles.buttonText}>Use Item</Text>
             </Link>
           </View>
